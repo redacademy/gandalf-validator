@@ -87,7 +87,7 @@ class Gandalf extends React.Component {
     return (e) => {
       this.handleChange({
         name,
-        value: e.target.value,
+        value: e.target.value
       });
     };
   }
@@ -123,7 +123,7 @@ class Gandalf extends React.Component {
   buildFieldElement(field) {
     return React.createElement(
       field.component,
-      Object.assign({}, field.originalProps, this.buildElementProps(field.name)),
+      Object.assign({}, field.originalProps, this.buildElementProps(field.name))
     );
   }
 
@@ -159,8 +159,7 @@ class Gandalf extends React.Component {
 
   getCleanFormData() {
     this.runManualFormValidation();
-    if (!this.formIsValid()) return false;
-    return this.getFormData();
+    return this.formIsValid() ? this.getFormData() : false;
   }
 }
 
