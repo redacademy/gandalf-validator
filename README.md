@@ -2,13 +2,19 @@
 
 Determines who shall and shall not pass form validation in React
 
+## Installation
+
+```shall
+npm install --save gandalf-validator
+```
+
 ## Usage
 
 The `Gandalf` class extends `React.Component`, so we start by extending `Gandalf`.
 
 ```javascript
 import React from 'react';
-import Gandalf from 'gandalf'; // (Todo: push this to NPM!)
+import Gandalf from 'gandalf-validator';
 
 class Form extends Gandalf {}
 
@@ -21,20 +27,20 @@ The values at each key are the definition of the form elements you with to build
 
 __Options:__
 
-| Property          | Type             | Description
-|-------------------|------------------|------------------------------------------------------
-| component         | React Component  | The component to render
-| props             | Object           | Props to pass to the component
-| validators        | Array            | List of validations to apply to the value
-| errorPropName     | String           | The name of the prop in `component` used to display errors (optional)
-| errorPropIsBool   | Boolean          | Whether the `errorPropName` expects a boolean instead of a string (optional)
-| debounce          | Integer          | Milliseconds to delay validation, resets w/ each keystroke (optional)
+| Property            | Type             | Description
+|---------------------|------------------|------------------------------------------------------
+| `component`         | React Component  | The component to render
+| `props`             | Object           | Props to pass to the component
+| `validators`        | Array            | List of validations to apply to the value
+| `errorPropName`     | String           | The name of the prop in `component` used to display errors (optional)
+| `errorPropIsBool`   | Boolean          | Whether the `errorPropName` expects a boolean instead of a string (optional)
+| `debounce`          | Integer          | Milliseconds to delay validation, resets w/ each keystroke (optional)
 
 __Example:__
 
 ```javascript
 import React from 'react';
-import Gandalf from 'gandalf';
+import Gandalf from 'gandalf-validator';
 import TextField from 'material-ui/TextField';
 import { Input } from 'semantic-ui-react';
 
@@ -93,17 +99,23 @@ Since Gandalf is a React Component, you can use its render method for output:
 
 ```javascript
 render() {
-    const fields = this.state.fields;
+  const fields = this.state.fields;
 
-    return (
-      <form>
-        <h1>My Form</h1>
-        { fields.name.element } <br />
-        { fields.age.element } <br />
-        { fields.email.element } <br />
-        { fields.colour.element } <br />
-        <span>{ fields.colour.errorMessage ? fields.colour.errorMessage : ''}</span>
-      </form>
-    );
-  }
+  return (
+    <form>
+      <h1>My Form</h1>
+      { fields.name.element } <br />
+      { fields.age.element } <br />
+      { fields.email.element } <br />
+      { fields.colour.element } <br />
+      <span>{ fields.colour.errorMessage ? fields.colour.errorMessage : ''}</span>
+    </form>
+  );
+}
 ```
+
+## Contributing
+
+File a Github Issue or fork this repo and make a PR.
+
+To build locally, use `npm run build`. This will transpile and uglify the library.
