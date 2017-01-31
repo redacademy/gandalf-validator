@@ -23,5 +23,37 @@
   "bugs": {
     "url": "https://github.com/redacademy/gandalf-validator/issues"
   },
-  "homepage": "https://github.com/redacademy/gandalf-validator#readme"
+  "homepage": "https://github.com/redacademy/gandalf-validator#readme",
+  "contributors": [
+    {
+      "name": "Blake Turner",
+      "email": "mail@blakewilliamturner.com",
+      "url": "https://github.com/BlakeTurner"
+    },
+    {
+      "name": "Ringo Ng",
+      "email": "Ringong95@gmail.com",
+      "url": "https://github.com/ringong95"
+    },
+    {
+      "name": "Djordje Vujatovic",
+      "email": "djordje_v@hotmail.com",
+      "url": "https://github.com/DjordjeVujatovic"
+    },
+    {
+      "name": "Jonathan Funk",
+      "email": "jonfunk88@hotmail.com",
+      "url": "https://github.com/jonathanfunk"
+    },
+    {
+      "name": "Justin Levett-Yeats",
+      "email": "j@solaris.org.uk",
+      "url": "https://github.com/justinl-y"
+    },
+    {
+      "name": "Scott Fuoco",
+      "email": "scottfuoco@gmail.com",
+      "url": "https://github.com/scottfuoco"
+    }
+  ]
 }
