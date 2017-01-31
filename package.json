@@ -1,0 +1,27 @@
+{
+  "name": "gandalf-validator",
+  "version": "0.1.0",
+  "description": "Determines who shall and shall not pass form validation in React",
+  "main": "src/gandalf.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/redacademy/gandalf-validator.git"
+  },
+  "keywords": [
+    "react",
+    "form",
+    "validation",
+    "redux",
+    "material-ui",
+    "semantic-ui"
+  ],
+  "author": "RED Academy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/redacademy/gandalf-validator/issues"
+  },
+  "homepage": "https://github.com/redacademy/gandalf-validator#readme"
+}
