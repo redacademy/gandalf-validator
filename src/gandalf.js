@@ -31,19 +31,6 @@ class Gandalf extends React.Component {
     });
   }
 
-  getErrorMessage(name) {
-    const { value, validators } = this.state.fields[name];
-    const errorKey = validators.find(validator => this.validators[validator](value));
-
-    return this.errorMessages[errorKey];
-  }
-
-  createField(name) {
-    const field = this.state.fields[name];
-    field.element = this.buildFieldElement(field);
-    this.updateFieldState(field);
-  }
-
   augmentFieldData(name) {
     const {
       component,
@@ -69,6 +56,25 @@ class Gandalf extends React.Component {
 
     // Note: updated state won't propagate until setState() is called
     this.state.fields = Object.assign({}, this.state.fields, { [name]: fieldData });
+  }
+
+  createField(name) {
+    const field = this.state.fields[name];
+    field.element = this.buildFieldElement(field);
+    this.updateFieldState(field);
+  }
+
+  updateFieldState(field) {
+    this.setState({
+      fields: Object.assign({}, this.state.fields, { [field.name]: field }),
+    });
+  }
+
+  buildFieldElement(field) {
+    return React.createElement(
+      field.component,
+      Object.assign({}, field.originalProps, this.buildElementProps(field.name))
+    );
   }
 
   buildElementProps(name) {
@@ -120,22 +126,16 @@ class Gandalf extends React.Component {
     }, field.debounce);
   }
 
-  buildFieldElement(field) {
-    return React.createElement(
-      field.component,
-      Object.assign({}, field.originalProps, this.buildElementProps(field.name))
-    );
+  getErrorMessage(name) {
+    const { value, validators } = this.state.fields[name];
+    const errorKey = validators.find(validator => this.validators[validator](value));
+
+    return this.errorMessages[errorKey];
   }
 
-  updateFieldState(field) {
-    this.setState({
-      fields: Object.assign({}, this.state.fields, { [field.name]: field }),
-    });
-  }
-
-  // If any fields have an error message, the form is invalid
-  formIsValid() {
-    return !Object.keys(this.state.fields).find(fieldName => this.state.fields[fieldName].errorMessage);
+  getCleanFormData() {
+    this.runManualFormValidation();
+    return this.formIsValid() ? this.getFormData() : null;
   }
 
   runManualFormValidation() {
@@ -149,17 +149,17 @@ class Gandalf extends React.Component {
     });
   }
 
+  // If any fields have an error message, the form is invalid
+  formIsValid() {
+    return !Object.keys(this.state.fields).find(fieldName => this.state.fields[fieldName].errorMessage);
+  }
+
   getFormData() {
     return Object.keys(this.state.fields).reduce((formValues, fieldName) => {
       const field = this.state.fields[fieldName];
       formValues[fieldName] = field.value;
       return formValues;
     }, {});
-  }
-
-  getCleanFormData() {
-    this.runManualFormValidation();
-    return this.formIsValid() ? this.getFormData() : false;
   }
 }
 

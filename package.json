@@ -4,7 +4,8 @@
   "description": "Determines who shall and shall not pass form validation in React",
   "main": "dist/gandalf.js",
   "scripts": {
-    "build": "gulp"
+    "build": "gulp",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -60,11 +61,15 @@
     "react": "^15.4.2"
   },
   "devDependencies": {
+    "babel-jest": "^18.0.0",
     "babel-preset-es2015": "^6.22.0",
-    "babel-preset-react": "^6.22.0",
+    "babel-preset-react": "^6.23.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-uglify": "^2.0.1",
-    "pump": "^1.0.2"
+    "jest": "^18.1.0",
+    "jest-cli": "^18.1.0",
+    "pump": "^1.0.2",
+    "react-test-renderer": "^15.4.2"
   }
 }
