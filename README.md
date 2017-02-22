@@ -1,7 +1,5 @@
 # gandalf-validator
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b0d590c831584384b3457c91926efaff)](https://www.codacy.com/app/REDAcademy/gandalf-validator?utm_source=github.com&utm_medium=referral&utm_content=redacademy/gandalf-validator&utm_campaign=badger)
-
 Determines who shall and shall not pass form validation in React
 
 ## Installation
