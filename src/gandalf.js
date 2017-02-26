@@ -1,136 +1,31 @@
 const React = require('react');
+const FormElement = require('./form-element');
 
 class Gandalf extends React.Component {
   constructor(fields = {}) {
     super();
-
     this.state = { fields };
-
-    this.timeOuts = {};
-
-    this.errorMessages = {
-      required: 'This field is required',
-      numeric: 'This value must be a number',
-      email: 'This value must an email address',
-    };
-
-    this.validators = {
-      required: v => !v,
-      numeric: v => isNaN(v),
-      email: v => !/.+@.+\..+/.test(v),
-    };
   }
 
   componentWillMount() {
     const elementKeys = Object.keys(this.state.fields);
 
-    elementKeys.forEach(name => this.augmentFieldData(name));
+    elementKeys.forEach(name => {
+      const data = this.state.fields[name];
+      data.name = name;
+      data.onUpdate = () => this.updateFieldState;
+      this.state.fields[name] = new FormElement(data);
+    });
 
     this.setState({ fields: Object.assign({}, this.state.fields) }, () => {
-      elementKeys.forEach(name => this.createField(name));
+      elementKeys.forEach(name => this.state.fields[name].createReactElement());
     });
-  }
-
-  augmentFieldData(name) {
-    const {
-      component,
-      props = {},
-      validators,
-      debounce,
-      errorPropName = 'error',
-      errorPropIsBool = false,
-    } = this.state.fields[name];
-
-    const fieldData = {
-      key: name,
-      name,
-      component,
-      validators,
-      errorPropName,
-      errorPropIsBool,
-      debounce,
-      originalProps: props,
-      errorMessage: '',
-      value: '',
-    };
-
-    // Note: updated state won't propagate until setState() is called
-    this.state.fields = Object.assign({}, this.state.fields, { [name]: fieldData });
-  }
-
-  createField(name) {
-    const field = this.state.fields[name];
-    field.element = this.buildFieldElement(field);
-    this.updateFieldState(field);
   }
 
   updateFieldState(field) {
     this.setState({
       fields: Object.assign({}, this.state.fields, { [field.name]: field }),
     });
-  }
-
-  buildFieldElement(field) {
-    return React.createElement(
-      field.component,
-      Object.assign({}, field.originalProps, this.buildElementProps(field.name))
-    );
-  }
-
-  buildElementProps(name) {
-    const field = this.state.fields[name];
-
-    return {
-      name,
-      key: name,
-      onChange: this.createChangeListener(name),
-      [field.errorPropName]: field.errorPropIsBool ? !!field.errorMessage : field.errorMessage,
-      value: field.value,
-    };
-  }
-
-  createChangeListener(name) {
-    return (e) => {
-      this.handleChange({
-        name,
-        value: e.target.value
-      });
-    };
-  }
-
-  handleChange({ name, value, skipDebounce }) {
-    const field = this.state.fields[name];
-
-    field.value = value;
-
-    if (field.debounce && !skipDebounce) {
-      this.handleDebounce(name);
-    } else {
-      field.errorMessage = this.getErrorMessage(name);
-    }
-
-    field.element = this.buildFieldElement(field);
-
-    this.updateFieldState(field);
-  }
-
-  handleDebounce(name) {
-    const field = this.state.fields[name];
-
-    clearTimeout(this.timeOuts[name]);
-
-    this.timeOuts[name] = setTimeout(() => {
-      field.errorMessage = this.getErrorMessage(name);
-      field.element = this.buildFieldElement(field);
-      this.updateFieldState(field);
-    }, field.debounce);
-  }
-
-  getErrorMessage(name) {
-    const { value, validators } = this.state.fields[name];
-    const errorKey = validators.find(validator => this.validators[validator](value));
-
-    return this.errorMessages[errorKey];
   }
 
   getCleanFormData() {
@@ -141,8 +36,7 @@ class Gandalf extends React.Component {
   runManualFormValidation() {
     Object.keys(this.state.fields).forEach((fieldName) => {
       const field = this.state.fields[fieldName];
-      this.handleChange({
-        name: fieldName,
+      field.handleChange({
         value: field.value,
         skipDebounce: true,
       });
