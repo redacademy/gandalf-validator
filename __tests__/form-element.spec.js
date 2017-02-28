@@ -1,11 +1,12 @@
 jest.mock('react');
 jest.mock('../src/validator', () => ({
-  validate: jest.fn()
+  validate: jest.fn(),
+  getErrorMessage: jest.fn(),
 }));
 
-const FormElement = require('../src/form-element.js');
-const React = require('react');
-const validator = require('../src/validator');
+import React from 'react';
+import FormElement from '../src/form-element';
+import * as validator from '../src/validator';
 
 describe('FormElement', () => {
   let test;

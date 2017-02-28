@@ -1,7 +1,7 @@
 // __tests__/gandalf.spec.js
 jest.mock('react');
 
-const Gandalf = require('../src/gandalf');
+import Gandalf from '../src/gandalf';
 
 describe('Gandalf', () => {
   let test;

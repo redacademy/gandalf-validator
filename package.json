@@ -5,7 +5,7 @@
   "main": "dist/gandalf.js",
   "scripts": {
     "build": "gulp",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "repository": {
     "type": "git",
@@ -61,18 +61,32 @@
     "react": "^15.4.2"
   },
   "devDependencies": {
+    "@types/react": "^15.0.13",
+    "awesome-typescript-loader": "^3.0.8",
     "babel-jest": "^18.0.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-react": "^6.23.0",
+    "babel-preset-stage-0": "^6.22.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
+    "gulp-typescript": "^3.1.5",
     "gulp-uglify": "^2.0.1",
-    "jest": "^18.1.0",
-    "jest-cli": "^18.1.0",
-    "pump": "^1.0.2",
-    "react-test-renderer": "^15.4.2"
+    "jest": "^19.0.2",
+    "jest-cli": "^19.0.2",
+    "typescript": "^2.2.1",
+    "typescript-babel-jest": "^1.0.1",
+    "webpack": "^2.2.1"
   },
   "jest": {
-    "verbose": true
-  }
+    "transform": {
+      "^.+\\.(js|ts|tsx)$": "typescript-babel-jest"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "testRegex": "/__tests__/.*\\.spec\\.(js|ts|tsx)$"
+  },
+  "verbose": true
 }
