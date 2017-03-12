@@ -1,4 +1,3 @@
-// src/form-element
 import React from 'react';
 import * as validator from './validator';
 
@@ -76,25 +75,6 @@ class FormElement {
       });
     }
   }
-
-  /*
-
-  handleChange({ name, value, skipDebounce }) {
-    const field = this.state.fields[name];
-
-    field.value = value;
-
-    if (field.debounce && !skipDebounce) {
-      this.handleDebounce(name);
-    } else {
-      field.errorMessage = this.getErrorMessage(name);
-    }
-
-    field.element = this.buildFieldElement(field);
-
-    this.updateFieldState(field);
-  }
-  */
 
   private handleChange({ value, skipDebounce }: changeObject) {
     this.value = value;
