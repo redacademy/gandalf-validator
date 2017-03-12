@@ -27,7 +27,7 @@ describe('validator', () => {
     describe('validator: numeric', () => {
       describe('when value is numeric', () => {
         it('should return true', () => {
-          expect(validator.isValid('numeric', 100)).toBe(true);
+          expect(validator.isValid('numeric', '100')).toBe(true);
           expect(validator.isValid('numeric', -100)).toBe(true);
           expect(validator.isValid('numeric', 0)).toBe(true);
           expect(validator.isValid('numeric', 1.23)).toBe(true);
@@ -41,7 +41,6 @@ describe('validator', () => {
           expect(validator.isValid('numeric', null)).toBe(false);
           expect(validator.isValid('numeric', true)).toBe(false);
           expect(validator.isValid('numeric', 'str')).toBe(false);
-          expect(validator.isValid('numeric', '100')).toBe(false);
         });
       });
     });

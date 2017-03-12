@@ -1,1 +1,114 @@
-"use strict";function _interopRequireDefault(e){return e&&e.__esModule?e:{default:e}}function _defineProperty(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function _classCallCheck(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function _possibleConstructorReturn(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function _inherits(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(exports,"__esModule",{value:!0});var _createClass=function(){function e(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}return function(t,n,r){return n&&e(t.prototype,n),r&&e(t,r),t}}(),_react=require("react"),_react2=_interopRequireDefault(_react),_formElement=require("./form-element"),_formElement2=_interopRequireDefault(_formElement),Gandalf=function(e){function t(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};_classCallCheck(this,t);var n=_possibleConstructorReturn(this,(t.__proto__||Object.getPrototypeOf(t)).call(this));return n.state={fields:e},n}return _inherits(t,e),_createClass(t,[{key:"componentWillMount",value:function(){var e=this,t=Object.keys(this.state.fields);t.forEach(function(t){var n=e.state.fields[t];n.name=t,n.onUpdate=function(t){return e.updateFieldState(t)},e.state.fields[t]=new _formElement2.default(n)}),this.setState({fields:Object.assign({},this.state.fields)},function(){t.forEach(function(t){return e.state.fields[t].createReactElement()})})}},{key:"updateFieldState",value:function(e){this.setState({fields:Object.assign({},this.state.fields,_defineProperty({},e.name,e))})}},{key:"getCleanFormData",value:function(){return this.runManualFormValidation(),this.formIsValid()?this.getFormData():null}},{key:"runManualFormValidation",value:function(){var e=this;Object.keys(this.state.fields).forEach(function(t){var n=e.state.fields[t];n.handleChange({value:n.value,skipDebounce:!0})})}},{key:"formIsValid",value:function(){var e=this;return!Object.keys(this.state.fields).find(function(t){return e.state.fields[t].errorMessage})}},{key:"getFormData",value:function(){var e=this;return Object.keys(this.state.fields).reduce(function(t,n){var r=e.state.fields[n];return t[n]=r.value,t},{})}}]),t}(_react2.default.Component);exports.default=Gandalf;
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _formElement = require('./form-element');
+
+var _formElement2 = _interopRequireDefault(_formElement);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Gandalf = function (_React$Component) {
+    _inherits(Gandalf, _React$Component);
+
+    function Gandalf() {
+        var fields = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+        _classCallCheck(this, Gandalf);
+
+        var _this = _possibleConstructorReturn(this, (Gandalf.__proto__ || Object.getPrototypeOf(Gandalf)).call(this));
+
+        _this.state = { fields: fields };
+        return _this;
+    }
+
+    _createClass(Gandalf, [{
+        key: 'componentWillMount',
+        value: function componentWillMount() {
+            var _this2 = this;
+
+            var elementKeys = Object.keys(this.state.fields);
+            elementKeys.forEach(function (name) {
+                var data = _this2.state.fields[name];
+                data.name = name;
+                data.onUpdate = function (field) {
+                    return _this2.updateFieldState(field);
+                };
+                _this2.state.fields[name] = new _formElement2.default(data);
+            });
+            this.setState({ fields: Object.assign({}, this.state.fields) }, function () {
+                elementKeys.forEach(function (name) {
+                    return _this2.state.fields[name].createReactElement();
+                });
+            });
+        }
+    }, {
+        key: 'updateFieldState',
+        value: function updateFieldState(field) {
+            this.setState({
+                fields: Object.assign({}, this.state.fields, _defineProperty({}, field.name, field))
+            });
+        }
+    }, {
+        key: 'getCleanFormData',
+        value: function getCleanFormData() {
+            this.runManualFormValidation();
+            return this.formIsValid() ? this.getFormData() : null;
+        }
+    }, {
+        key: 'runManualFormValidation',
+        value: function runManualFormValidation() {
+            var _this3 = this;
+
+            Object.keys(this.state.fields).forEach(function (fieldName) {
+                var field = _this3.state.fields[fieldName];
+                field.handleChange({
+                    value: field.value,
+                    skipDebounce: true
+                });
+            });
+        }
+        // If any fields have an error message, the form is invalid
+
+    }, {
+        key: 'formIsValid',
+        value: function formIsValid() {
+            var _this4 = this;
+
+            return !Object.keys(this.state.fields).find(function (fieldName) {
+                return _this4.state.fields[fieldName].errorMessage;
+            });
+        }
+    }, {
+        key: 'getFormData',
+        value: function getFormData() {
+            var _this5 = this;
+
+            return Object.keys(this.state.fields).reduce(function (formValues, fieldName) {
+                var field = _this5.state.fields[fieldName];
+                formValues[fieldName] = field.value;
+                return formValues;
+            }, {});
+        }
+    }]);
+
+    return Gandalf;
+}(_react2.default.Component);
+
+exports.default = Gandalf;

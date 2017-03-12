@@ -1,6 +1,6 @@
 {
   "name": "gandalf-validator",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Determines who shall and shall not pass form validation in React",
   "main": "dist/gandalf.js",
   "scripts": {
@@ -70,7 +70,6 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-typescript": "^3.1.5",
-    "gulp-uglify": "^2.0.1",
     "jest": "^19.0.2",
     "jest-cli": "^19.0.2",
     "typescript": "^2.2.1",
