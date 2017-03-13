@@ -27,14 +27,16 @@ The values at each key are the definition of the form elements you with to build
 
 __Options:__
 
-| Property            | Type             | Description
-|---------------------|------------------|------------------------------------------------------
-| `component`         | React Component  | The component to render
-| `props`             | Object           | Props to pass to the component
-| `validators`        | Array            | List of validations to apply to the value
-| `errorPropName`     | String           | The name of the prop in `component` used to display errors (optional)
-| `errorPropIsBool`   | Boolean          | Whether the `errorPropName` expects a boolean instead of a string (optional)
-| `debounce`          | Integer          | Milliseconds to delay validation, resets w/ each keystroke (optional)
+| Property              | Type             | Description
+|-----------------------|------------------|------------------------------------------------------
+| `component`           | React Component  | The component to render
+| `props`               | Object           | Props to pass to the component
+| `validators`          | Array            | List of validations to apply to the value
+| `errorPropName`       | String           | The name of the prop in `component` used to display errors (optional)
+| `errorPropIsBool`     | Boolean          | Whether the `errorPropName` expects a boolean instead of a string (optional)
+| `getValueInOnChange`  | Function         | If the value in the onChange handler is something other than e.target.value, this function can get it. Takes (e, key, payload).
+| `children          `  | Array            | Array of child React Components. Remember to add a `key` prop.
+| `debounce`            | Integer          | Milliseconds to delay validation, resets w/ each keystroke (optional)
 
 __Example:__
 
@@ -54,6 +56,7 @@ class Form extends Gandalf {
         props: {
           hintText: 'Name',
         },
+        debounce: 500,
       },
       age: {
         component: TextField,
@@ -63,6 +66,22 @@ class Form extends Gandalf {
           hintText: 'Age',
         },
         debounce: 300,
+      },
+      frequency: {
+        component: SelectField,
+        validators: ['required'],
+        errorPropName: 'errorText',
+        getValueInOnChange: (e, key, value) => value,
+        props: {
+          hintText: 'Frequency',
+        },
+        children: [
+          <MenuItem key={1} value="Never" primaryText="Never" />,
+          <MenuItem key={2} value="Every Night" primaryText="Every Night" />,
+          <MenuItem key={3} value="Weeknights" primaryText="Weeknights" />,
+          <MenuItem key={4} value="Weekends" primaryText="Weekends" />,
+          <MenuItem key={5} value="Weekly" primaryText="Weekly" />,
+        ],
       },
       colour: {
         component: Input,

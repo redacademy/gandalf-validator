@@ -12,8 +12,10 @@ interface formElementProps {
   validators: Array<string>;
   errorPropName: string;
   errorPropIsBool: boolean;
-  debounce: number,
+  debounce: number;
+  getValueInOnChange: (...args) => any;
   props: Object;
+  children: Array<any>;
   onUpdate: (FormElement) => void;
 }
 
@@ -30,6 +32,8 @@ class FormElement {
   value: string;
   onUpdate: Function;
   debounce: number;
+  getValueInOnChange: (...args) => any;
+  children: Array<any>;
 
   private timeOut: number;
 
@@ -45,6 +49,9 @@ class FormElement {
     this.originalProps = props.props;
     this.onUpdate = props.onUpdate;
     this.debounce = props.debounce;
+    this.getValueInOnChange = props.getValueInOnChange;
+    this.children = props.children;
+
     this.errorMessage = '';
     this.value = '';
     this.timeOut = null;
@@ -54,7 +61,8 @@ class FormElement {
   createReactElement(): React.ComponentElement<any, React.Component<any, React.ComponentState>> {
     return React.createElement(
       this.component,
-      Object.assign({}, this.originalProps, this.buildElementProps())
+      Object.assign({}, this.originalProps, this.buildElementProps()),
+      this.children
     );
   }
 
@@ -69,9 +77,10 @@ class FormElement {
   }
 
   private createChangeListener(): Function {
-    return (e) => {
+    return (e, key, value) => {
+
       this.handleChange({
-        value: e.target.value
+        value: this.getValueInOnChange ? this.getValueInOnChange(e, key, value) : e.target.value
       });
     }
   }

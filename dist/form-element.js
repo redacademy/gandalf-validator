@@ -4,8 +4,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // src/form-element
-
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = require('react');
 
@@ -37,6 +36,8 @@ var FormElement = function () {
         this.originalProps = props.props;
         this.onUpdate = props.onUpdate;
         this.debounce = props.debounce;
+        this.getValueInOnChange = props.getValueInOnChange;
+        this.children = props.children;
         this.errorMessage = '';
         this.value = '';
         this.timeOut = null;
@@ -46,7 +47,7 @@ var FormElement = function () {
     _createClass(FormElement, [{
         key: 'createReactElement',
         value: function createReactElement() {
-            return _react2.default.createElement(this.component, Object.assign({}, this.originalProps, this.buildElementProps()));
+            return _react2.default.createElement(this.component, Object.assign({}, this.originalProps, this.buildElementProps()), this.children);
         }
     }, {
         key: 'buildElementProps',
@@ -64,26 +65,12 @@ var FormElement = function () {
         value: function createChangeListener() {
             var _this = this;
 
-            return function (e) {
+            return function (e, key, value) {
                 _this.handleChange({
-                    value: e.target.value
+                    value: _this.getValueInOnChange ? _this.getValueInOnChange(e, key, value) : e.target.value
                 });
             };
         }
-        /*
-           handleChange({ name, value, skipDebounce }) {
-          const field = this.state.fields[name];
-             field.value = value;
-             if (field.debounce && !skipDebounce) {
-            this.handleDebounce(name);
-          } else {
-            field.errorMessage = this.getErrorMessage(name);
-          }
-             field.element = this.buildFieldElement(field);
-             this.updateFieldState(field);
-        }
-        */
-
     }, {
         key: 'handleChange',
         value: function handleChange(_ref2) {
