@@ -57,7 +57,8 @@ var FormElement = function () {
             return _ref = {
                 name: this.name,
                 key: this.key,
-                onChange: this.createChangeListener()
+                onChange: this.createChangeListener(),
+                onChangeText: this.createChangeListener()
             }, _defineProperty(_ref, this.errorPropName, this.errorPropIsBool ? !!this.errorMessage : this.errorMessage), _defineProperty(_ref, 'value', this.value), _ref;
         }
     }, {
