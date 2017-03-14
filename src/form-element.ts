@@ -71,6 +71,7 @@ class FormElement {
       name: this.name,
       key: this.key,
       onChange: this.createChangeListener(),
+      onChangeText: this.createChangeListener(),
       [this.errorPropName]: this.errorPropIsBool ? !!this.errorMessage : this.errorMessage,
       value: this.value,
     };

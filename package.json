@@ -1,6 +1,6 @@
 {
   "name": "gandalf-validator",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Determines who shall and shall not pass form validation in React",
   "main": "dist/gandalf.js",
   "scripts": {
