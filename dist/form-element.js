@@ -37,6 +37,7 @@ var FormElement = function () {
         this.onUpdate = props.onUpdate;
         this.debounce = props.debounce;
         this.getValueInOnChange = props.getValueInOnChange;
+        this.onChangeHandler = props.onChangeHandler || 'onChange';
         this.children = props.children;
         this.errorMessage = '';
         this.value = '';
@@ -56,10 +57,8 @@ var FormElement = function () {
 
             return _ref = {
                 name: this.name,
-                key: this.key,
-                onChange: this.createChangeListener(),
-                onChangeText: this.createChangeListener()
-            }, _defineProperty(_ref, this.errorPropName, this.errorPropIsBool ? !!this.errorMessage : this.errorMessage), _defineProperty(_ref, 'value', this.value), _ref;
+                key: this.key
+            }, _defineProperty(_ref, this.onChangeHandler, this.createChangeListener()), _defineProperty(_ref, this.errorPropName, this.errorPropIsBool ? !!this.errorMessage : this.errorMessage), _defineProperty(_ref, 'value', this.value), _ref;
         }
     }, {
         key: 'createChangeListener',

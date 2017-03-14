@@ -13,6 +13,7 @@ interface formElementProps {
   errorPropName: string;
   errorPropIsBool: boolean;
   debounce: number;
+  onChangeHandler: string;
   getValueInOnChange: (...args) => any;
   props: Object;
   children: Array<any>;
@@ -32,6 +33,7 @@ class FormElement {
   value: string;
   onUpdate: Function;
   debounce: number;
+  onChangeHandler: string;
   getValueInOnChange: (...args) => any;
   children: Array<any>;
 
@@ -50,6 +52,7 @@ class FormElement {
     this.onUpdate = props.onUpdate;
     this.debounce = props.debounce;
     this.getValueInOnChange = props.getValueInOnChange;
+    this.onChangeHandler = props.onChangeHandler || 'onChange';
     this.children = props.children;
 
     this.errorMessage = '';
@@ -70,8 +73,7 @@ class FormElement {
     return {
       name: this.name,
       key: this.key,
-      onChange: this.createChangeListener(),
-      onChangeText: this.createChangeListener(),
+      [this.onChangeHandler]: this.createChangeListener(),
       [this.errorPropName]: this.errorPropIsBool ? !!this.errorMessage : this.errorMessage,
       value: this.value,
     };
