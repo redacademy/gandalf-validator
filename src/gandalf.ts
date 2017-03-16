@@ -10,7 +10,7 @@ class Gandalf extends React.Component<{}, GandalfState> {
 
   constructor(fieldData = []) {
     super();
-    this.state = { fieldData };
+    this.state = { fieldData, fields: {} };
   }
 
   componentWillMount() {

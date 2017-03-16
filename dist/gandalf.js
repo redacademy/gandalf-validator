@@ -28,13 +28,13 @@ var Gandalf = function (_React$Component) {
     _inherits(Gandalf, _React$Component);
 
     function Gandalf() {
-        var fields = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var fieldData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
         _classCallCheck(this, Gandalf);
 
         var _this = _possibleConstructorReturn(this, (Gandalf.__proto__ || Object.getPrototypeOf(Gandalf)).call(this));
 
-        _this.state = { fields: fields };
+        _this.state = { fieldData: fieldData, fields: {} };
         return _this;
     }
 
@@ -43,19 +43,11 @@ var Gandalf = function (_React$Component) {
         value: function componentWillMount() {
             var _this2 = this;
 
-            var elementKeys = Object.keys(this.state.fields);
-            elementKeys.forEach(function (name) {
-                var data = _this2.state.fields[name];
-                data.name = name;
+            this.state.fieldData.forEach(function (data) {
                 data.onUpdate = function (field) {
                     return _this2.updateFieldState(field);
                 };
-                _this2.state.fields[name] = new _formElement2.default(data);
-            });
-            this.setState({ fields: Object.assign({}, this.state.fields) }, function () {
-                elementKeys.forEach(function (name) {
-                    return _this2.state.fields[name].createReactElement();
-                });
+                _this2.state.fields[data.name] = new _formElement2.default(data);
             });
         }
     }, {
