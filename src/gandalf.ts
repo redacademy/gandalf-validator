@@ -2,28 +2,21 @@ import React from 'react';
 import FormElement from './form-element';
 
 interface GandalfState {
-  fields: Object
+  fieldData: Array<any>
+  fields?: Object
 }
 
 class Gandalf extends React.Component<{}, GandalfState> {
 
-  constructor(fields = {}) {
+  constructor(fieldData = []) {
     super();
-    this.state = { fields };
+    this.state = { fieldData };
   }
 
   componentWillMount() {
-    const elementKeys = Object.keys(this.state.fields);
-
-    elementKeys.forEach(name => {
-      const data = this.state.fields[name];
-      data.name = name;
+    this.state.fieldData.forEach(data => {
       data.onUpdate = (field) => this.updateFieldState(field);
-      this.state.fields[name] = new FormElement(data);
-    });
-
-    this.setState({ fields: Object.assign({}, this.state.fields) }, () => {
-      elementKeys.forEach(name => this.state.fields[name].createReactElement());
+      this.state.fields[data.name] = new FormElement(data);
     });
   }
 

@@ -18,8 +18,9 @@ describe('Gandalf', () => {
       name: 'component'
     };
 
-    test.fields = {
-      name: {
+    test.fields = [
+      {
+        name: 'name',
         component: test.component,
         validators: ['required'],
         errorPropName: 'errorText',
@@ -27,7 +28,7 @@ describe('Gandalf', () => {
           hintText: 'Name',
         },
       },
-    }
+    ]
   });
 
   describe('.getCleanFormData', () => {

@@ -25,7 +25,7 @@ The `Gandalf` constructor take a `fields` object as its only parameters.
 The keys of the `fields` object are the names of your form elements.
 The values at each key are the definition of the form elements you with to build.
 
-__Options:__
+#### Options
 
 | Property              | Type             | Description
 |-----------------------|------------------|------------------------------------------------------
@@ -34,11 +34,12 @@ __Options:__
 | `validators`          | Array            | List of validations to apply to the value
 | `errorPropName`       | String           | The name of the prop in `component` used to display errors (optional)
 | `errorPropIsBool`     | Boolean          | Whether the `errorPropName` expects a boolean instead of a string (optional)
+| `onChangeHandler`     | Function         | Specify a name for the change handler function, defaults to `onChange`
 | `getValueInOnChange`  | Function         | If the value in the onChange handler is something other than e.target.value, this function can get it. Takes (e, key, payload).
 | `children          `  | Array            | Array of child React Components. Remember to add a `key` prop.
 | `debounce`            | Integer          | Milliseconds to delay validation, resets w/ each keystroke (optional)
 
-__Example:__
+#### Fields Object
 
 ```javascript
 import React from 'react';
@@ -48,8 +49,9 @@ import { Input } from 'semantic-ui-react';
 
 class Form extends Gandalf {
   constructor() {
-    const fields = {
-      name: {
+    const fields = [
+      {
+        name: 'name',
         component: TextField,
         validators: ['required'],
         errorPropName: 'errorText',
@@ -58,7 +60,8 @@ class Form extends Gandalf {
         },
         debounce: 500,
       },
-      age: {
+      {
+        name: 'age',
         component: TextField,
         validators: ['required', 'numeric'],
         errorPropName: 'errorText',
@@ -67,7 +70,8 @@ class Form extends Gandalf {
         },
         debounce: 300,
       },
-      frequency: {
+      {
+        name: 'frequency',
         component: SelectField,
         validators: ['required'],
         errorPropName: 'errorText',
@@ -83,7 +87,8 @@ class Form extends Gandalf {
           <MenuItem key={5} value="Weekly" primaryText="Weekly" />,
         ],
       },
-      colour: {
+      {
+        name: 'colour',
         component: Input,
         validators: ['required'],
         errorPropName: 'error',
@@ -93,7 +98,8 @@ class Form extends Gandalf {
         },
         debounce: 300,
       },
-      email: {
+      {
+        name: 'email',
         component: TextField,
         validators: ['required', 'email'],
         errorPropName: 'errorText',
@@ -109,7 +115,7 @@ class Form extends Gandalf {
 }
 ```
 
-## Rendering
+#### Rendering
 
 Gandalf builds your elements for you, and exposes them as the `element`
 member of each `fields` object.
@@ -125,6 +131,7 @@ render() {
       <h1>My Form</h1>
       { fields.name.element } <br />
       { fields.age.element } <br />
+      { fields.frequency.element } <br />
       { fields.email.element } <br />
       { fields.colour.element } <br />
       <span>{ fields.colour.errorMessage ? fields.colour.errorMessage : ''}</span>
@@ -132,6 +139,33 @@ render() {
   );
 }
 ```
+
+#### Getting Form Data
+
+Gandalf provides two methods for getting form data:
+
+```js
+  // Returns form data, regardless of its validity
+  this.getFormData();
+
+  // If the form is valid, returns the form data, otherwise returns null
+  this.getCleanFormData();
+```
+
+Recommended implementation:
+
+```js
+handleSubmit() {
+  const data = this.getCleanFormData();
+
+  // If form is invalid, all error messages will show automatically
+  // So you can simply exit the function
+  if (!data) return;
+
+  // Handle valid data here
+}
+```
+
 
 ## Contributing
 
