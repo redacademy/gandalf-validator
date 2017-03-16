@@ -13,7 +13,20 @@ class Gandalf extends React.Component<{}, GandalfState> {
     this.state = { fieldData, fields: {} };
   }
 
-  componentWillMount() {
+  componentWillMount(): void {
+    this.buildFields();
+  }
+
+  componentWillUpdate(): void {
+    this.buildFields();
+  }
+
+  addField(field): void {
+    this.state.fieldData.push(field);
+    this.setState({ fieldData: this.state.fieldData });
+  }
+
+  buildFields(): void {
     this.state.fieldData.forEach(data => {
       data.onUpdate = (field) => this.updateFieldState(field);
       this.state.fields[data.name] = new FormElement(data);

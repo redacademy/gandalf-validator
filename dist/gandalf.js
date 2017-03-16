@@ -41,6 +41,22 @@ var Gandalf = function (_React$Component) {
     _createClass(Gandalf, [{
         key: 'componentWillMount',
         value: function componentWillMount() {
+            this.buildFields();
+        }
+    }, {
+        key: 'componentWillUpdate',
+        value: function componentWillUpdate() {
+            this.buildFields();
+        }
+    }, {
+        key: 'addField',
+        value: function addField(field) {
+            this.state.fieldData.push(field);
+            this.setState({ fieldData: this.state.fieldData });
+        }
+    }, {
+        key: 'buildFields',
+        value: function buildFields() {
             var _this2 = this;
 
             this.state.fieldData.forEach(function (data) {
