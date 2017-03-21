@@ -10,7 +10,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var errorMessages = {
     required: 'This field is required',
     numeric: 'This value must be a number',
-    email: 'This value must an email address'
+    email: 'This value must be an email address'
 };
 var validatorFns = {
     required: function required(v) {

@@ -6,7 +6,7 @@ interface validationResponse {
 const errorMessages = {
   required: 'This field is required',
   numeric: 'This value must be a number',
-  email: 'This value must an email address',
+  email: 'This value must be an email address',
 };
 
 const validatorFns = {
