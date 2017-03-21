@@ -44,15 +44,11 @@ var Gandalf = function (_React$Component) {
             this.buildFields();
         }
     }, {
-        key: 'componentWillUpdate',
-        value: function componentWillUpdate() {
-            this.buildFields();
-        }
-    }, {
         key: 'addField',
-        value: function addField(field) {
-            this.state.fieldData.push(field);
-            this.setState({ fieldData: this.state.fieldData });
+        value: function addField(fieldData) {
+            this.state.fieldData.push(fieldData);
+            this.state.fields[fieldData.name] = this.buildField(fieldData);
+            this.setState({ fieldData: this.state.fieldData, fields: this.state.fields });
         }
     }, {
         key: 'buildFields',
@@ -60,11 +56,18 @@ var Gandalf = function (_React$Component) {
             var _this2 = this;
 
             this.state.fieldData.forEach(function (data) {
-                data.onUpdate = function (field) {
-                    return _this2.updateFieldState(field);
-                };
-                _this2.state.fields[data.name] = new _formElement2.default(data);
+                _this2.state.fields[data.name] = _this2.buildField(data);
             });
+        }
+    }, {
+        key: 'buildField',
+        value: function buildField(data) {
+            var _this3 = this;
+
+            var fieldData = Object.assign({}, data, { onUpdate: function onUpdate(field) {
+                    return _this3.updateFieldState(field);
+                } });
+            return new _formElement2.default(fieldData);
         }
     }, {
         key: 'updateFieldState',
@@ -82,10 +85,10 @@ var Gandalf = function (_React$Component) {
     }, {
         key: 'runManualFormValidation',
         value: function runManualFormValidation() {
-            var _this3 = this;
+            var _this4 = this;
 
             Object.keys(this.state.fields).forEach(function (fieldName) {
-                var field = _this3.state.fields[fieldName];
+                var field = _this4.state.fields[fieldName];
                 field.handleChange({
                     value: field.value,
                     skipDebounce: true
@@ -97,19 +100,19 @@ var Gandalf = function (_React$Component) {
     }, {
         key: 'formIsValid',
         value: function formIsValid() {
-            var _this4 = this;
+            var _this5 = this;
 
             return !Object.keys(this.state.fields).find(function (fieldName) {
-                return _this4.state.fields[fieldName].errorMessage;
+                return _this5.state.fields[fieldName].errorMessage;
             });
         }
     }, {
         key: 'getFormData',
         value: function getFormData() {
-            var _this5 = this;
+            var _this6 = this;
 
             return Object.keys(this.state.fields).reduce(function (formValues, fieldName) {
-                var field = _this5.state.fields[fieldName];
+                var field = _this6.state.fields[fieldName];
                 formValues[fieldName] = field.value;
                 return formValues;
             }, {});
