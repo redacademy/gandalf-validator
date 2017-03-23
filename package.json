@@ -5,7 +5,7 @@
   "main": "dist/gandalf.js",
   "scripts": {
     "build": "gulp",
-    "test": "jest --verbose"
+    "test": "jest --verbose --no-cache"
   },
   "repository": {
     "type": "git",

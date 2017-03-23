@@ -2,6 +2,17 @@
 
 Determines who shall and shall not pass form validation in React
 
+## Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Options](#options)
+  - [Fields Object](#fields-object)
+  - [Rendering](#rendering)
+  - [Getting Form Data](#getting-form-data)
+- [Building Components for Gandalf](#building-components-for-gandalf])
+- [Contributing](#contributing)
+
 ## Installation
 
 ```shall
@@ -135,6 +146,8 @@ render() {
       { fields.email.element } <br />
       { fields.colour.element } <br />
       <span>{ fields.colour.errorMessage ? fields.colour.errorMessage : ''}</span>
+
+      <button onClick={() => this.handleSubmit()}>Submit</button>
     </form>
   );
 }
@@ -163,6 +176,103 @@ handleSubmit() {
   if (!data) return;
 
   // Handle valid data here
+}
+```
+
+## Building Components for Gandalf
+
+Some component libraries provide inputs with built in error handling.
+
+For example, Material UI TextFields provide an `errorText` prop that alters the component's appearance if it exists. Similarly, Semantic UI's Input component provides a boolean `error` prop that turns the input red if it exists.
+
+But what if you want to build your own component for use with Gandalf? Turns out it's pretty easy.
+
+#### React Native Example
+
+React Native provides a TextInput component. It's very similar to an HTML input in regular React, with a few tiny differences. For example it exposes an `onChangeText` handler instead of an `onChange` handler for handling input changes.
+
+But it has no build in error handling. So let's build it. We'll call it `ValidatedTextInput`.
+
+```js
+import React from 'react';
+import { View, Text, TextInput } from 'react-native';
+
+const ValidatedTextInput = (props) => (
+  <View>
+    <View>
+      <Text>{ props.title }</Text>
+      <TextInput
+        onChangeText={props.onChange}
+        placeholder={props.placeholder}
+      />
+    </View>
+    {!!props.error &&
+    <View>
+      <Text>
+        { props.error }
+      </Text>
+    </View>
+    }
+  </View>
+);
+```
+
+We know that we can define arbitrary props in the [Fields Object](#fields-object).
+On top of those, Gandalf passes in an `error` prop (string) and an `onChange` handler (function).
+
+We can use the existence of `error` to conditionally render the error message UI. The rest is as simple as passing props to `TextInput`.
+
+Now we can use `ValidatedTextInput` in Gandalf:
+
+```js
+import React from 'react';
+import Gandalf from 'gandalf-validator';
+import { View, Text, TouchableHighlight } from 'react-native';
+
+import ValidatedTextInput from '../components/ValidatedTextInput';
+
+class Form extends Gandalf {
+  constructor() {
+    const fields = [
+      {
+        name: 'fName',
+        component: ValidatedTextInput,
+        getValueInOnChange: value => value,
+        validators: ['required'],
+        props: {
+          title: 'First Name',
+          placeholder: 'John Doe',
+        },
+        debounce: 300,
+      },
+    };
+
+    super(fields);
+  }
+
+  handleSubmit() {
+    const data = this.getCleanFormData();
+
+      // If form is invalid, all error messages will show automatically
+      // So you can simply exit the function
+      if (!data) return;
+
+      // Handle valid data here
+    }
+
+  render() {
+    const fields = this.state.fields;
+
+    return (
+      <View>
+        { fields.fName.element }
+
+        <TouchableHighlight onPress={this.handleSubmit}>
+          <Text>Submit</Text>
+        </TouchableHighlight>
+      </View>
+    );
+  }
 }
 ```
 
