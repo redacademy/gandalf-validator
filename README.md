@@ -10,7 +10,7 @@ Determines who shall and shall not pass form validation in React
   - [Fields Object](#fields-object)
   - [Rendering](#rendering)
   - [Getting Form Data](#getting-form-data)
-- [Building Components for Gandalf](#building-components-for-gandalf])
+- [Building Components for Gandalf](#building-components-for-gandalf)
 - [Contributing](#contributing)
 
 ## Installation
