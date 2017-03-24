@@ -1,6 +1,6 @@
 {
   "name": "gandalf-validator",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "Determines who shall and shall not pass form validation in React",
   "main": "dist/gandalf.js",
   "scripts": {
@@ -86,8 +86,5 @@
       "js"
     ],
     "testRegex": "/__tests__/.*\\.spec\\.(js|ts|tsx)$"
-  },
-  "babel": {
-    "presets": ["es2015"]
   }
 }

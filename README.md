@@ -282,3 +282,15 @@ class Form extends Gandalf {
 File a Github Issue or fork this repo and make a PR.
 
 To build locally, use `npm run build`. This will transpile and uglify the library.
+
+
+#### Running tests locally
+
+You will need to add a `.babelrc` file in your local `gandalf-validator` directory. It is git ignored, as it can conflict with `.babelrc` files in projects using Gandalf.
+
+`.babelrc`:
+```json
+{
+  "presets": ["es2015"]
+}
+```
