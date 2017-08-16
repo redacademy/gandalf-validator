@@ -29,6 +29,7 @@ class FormElement {
   errorPropName: string;
   errorPropIsBool: boolean;
   originalProps: any;
+  pristine: boolean;
   errorMessage: string;
   value: string;
   onUpdate: Function;
@@ -55,6 +56,7 @@ class FormElement {
     this.onChangeHandler = props.onChangeHandler || 'onChange';
     this.children = props.children;
 
+    this.pristine = true;
     this.errorMessage = '';
     this.value = '';
     this.timeOut = null;
@@ -89,6 +91,7 @@ class FormElement {
   }
 
   private handleChange({ value, skipDebounce }: changeObject) {
+    this.pristine = false;
     this.value = value;
 
     if (this.debounce && !skipDebounce) {

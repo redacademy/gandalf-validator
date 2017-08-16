@@ -10,6 +10,7 @@ Determines who shall and shall not pass form validation in React
   - [Fields Object](#fields-object)
   - [Rendering](#rendering)
   - [Getting Form Data](#getting-form-data)
+  - [Full Example](#full-example)
 - [Building Components for Gandalf](#building-components-for-gandalf)
 - [Contributing](#contributing)
 
@@ -165,6 +166,16 @@ Gandalf provides two methods for getting form data:
   this.getCleanFormData();
 ```
 
+Gandalf also privides two methods for checking the current state of the form:
+
+```js
+// Not every element on the form has been touched - it may be invalid, but not all errors are triggered
+this.formHasPristineElements()
+
+// Whether the form is currently valid. Use in combination with formHasPristineElements for reliable results
+this.formIsValid()
+```
+
 Recommended implementation:
 
 ```js
@@ -176,6 +187,115 @@ handleSubmit() {
   if (!data) return;
 
   // Handle valid data here
+}
+```
+
+#### Full Example
+
+```javascript
+import React from 'react';
+import Gandalf from 'gandalf-validator';
+import TextField from 'material-ui/TextField';
+import { Input } from 'semantic-ui-react';
+
+class Form extends Gandalf {
+  constructor() {
+    const fields = [
+      {
+        name: 'name',
+        component: TextField,
+        validators: ['required'],
+        errorPropName: 'errorText',
+        props: {
+          hintText: 'Name',
+        },
+        debounce: 500,
+      },
+      {
+        name: 'age',
+        component: TextField,
+        validators: ['required', 'numeric'],
+        errorPropName: 'errorText',
+        props: {
+          hintText: 'Age',
+        },
+        debounce: 300,
+      },
+      {
+        name: 'frequency',
+        component: SelectField,
+        validators: ['required'],
+        errorPropName: 'errorText',
+        getValueInOnChange: (e, key, value) => value,
+        props: {
+          hintText: 'Frequency',
+        },
+        children: [
+          <MenuItem key={1} value="Never" primaryText="Never" />,
+          <MenuItem key={2} value="Every Night" primaryText="Every Night" />,
+          <MenuItem key={3} value="Weeknights" primaryText="Weeknights" />,
+          <MenuItem key={4} value="Weekends" primaryText="Weekends" />,
+          <MenuItem key={5} value="Weekly" primaryText="Weekly" />,
+        ],
+      },
+      {
+        name: 'colour',
+        component: Input,
+        validators: ['required'],
+        errorPropName: 'error',
+        errorPropIsBool: true,
+        props: {
+          placeholder: 'Favourite Colour',
+        },
+        debounce: 300,
+      },
+      {
+        name: 'email',
+        component: TextField,
+        validators: ['required', 'email'],
+        errorPropName: 'errorText',
+        props: {
+          hintText: 'Email',
+        },
+        debounce: 300,
+      },
+    };
+
+    super(fields);
+  }
+
+  handleSubmit() {
+    const data = this.getCleanFormData();
+
+    // If form is invalid, all error messages will show automatically
+    // So you can simply exit the function
+    if (!data) return;
+
+    // Handle valid data here
+  }
+
+  render() {
+    const fields = this.state.fields;
+
+    return (
+      <form>
+        <h1>My Form</h1>
+        { fields.name.element } <br />
+        { fields.age.element } <br />
+        { fields.frequency.element } <br />
+        { fields.email.element } <br />
+        { fields.colour.element } <br />
+        <span>{ fields.colour.errorMessage ? fields.colour.errorMessage : ''}</span>
+
+        <button
+          onClick={() => this.handleSubmit()}
+          disabled={() => this.formHasPristineElements() || !this.formIsValid()}
+        >
+          Submit
+        </button>
+      </form>
+    );
+  }
 }
 ```
 
@@ -275,7 +395,6 @@ class Form extends Gandalf {
   }
 }
 ```
-
 
 ## Contributing
 

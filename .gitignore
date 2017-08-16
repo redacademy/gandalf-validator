@@ -35,7 +35,3 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
-
-# .babelrc allows the tests to run but can break the module being loaded propery
-# See README
-.babelrc
