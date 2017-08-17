@@ -33,7 +33,7 @@ class Form extends Gandalf {}
 export default Form;
 ```
 
-The `Gandalf` constructor take a `fields` object as its only parameters.
+The `Gandalf` constructor take a [fields object](#fields-object) as its only parameters.
 The keys of the `fields` object are the names of your form elements.
 The values at each key are the definition of the form elements you with to build.
 
@@ -43,13 +43,67 @@ The values at each key are the definition of the form elements you with to build
 |-----------------------|------------------|------------------------------------------------------
 | `component`           | React Component  | The component to render
 | `props`               | Object           | Props to pass to the component
-| `validators`          | Array            | List of validations to apply to the value
+| `validators`          | Array            | List of [validators](#validators) to apply to the value
 | `errorPropName`       | String           | The name of the prop in `component` used to display errors (optional)
 | `errorPropIsBool`     | Boolean          | Whether the `errorPropName` expects a boolean instead of a string (optional)
 | `onChangeHandler`     | Function         | Specify a name for the change handler function, defaults to `onChange`
 | `getValueInOnChange`  | Function         | If the value in the onChange handler is something other than e.target.value, this function can get it. Takes (e, key, payload).
 | `children          `  | Array            | Array of child React Components. Remember to add a `key` prop.
 | `debounce`            | Integer          | Milliseconds to delay validation, resets w/ each keystroke (optional)
+
+#### Validators
+
+Gandalf ships with several out of the box validations. Some are very simple, requiring only a string identifier. Others are more complex, requiring an object.
+
+__Simple__
+
+- `required`
+- `numeric`
+- `email`
+
+To enable a simple validator, add the string identifier to the `validators` prop.
+
+```js
+validators: ['required', 'numeric', 'email']
+```
+
+__Complex__
+
+- `minLength`
+- `maxLength`
+- `min`
+- `max`
+- `regex`
+
+Complex validators are objects with a `name` and `value` property.
+
+```js
+validators: [{ name: 'minLength', value: 8 }, { name: regex, value: /[^0-9]/g }]
+```
+
+__Simple + Complex__
+
+You can use both simple and complex validators on the same field.
+
+```js
+validators: [
+  'required',
+  { name: 'minLength', value: 8 },
+  { name: regex, value: /.+\s.+/g }
+]
+```
+
+__Custom Error Messages__
+
+Gandalf provides generic error messages by default, but you can pass your own to the Validator object. If you're using a simple validator, you can use an object with `name` and `message` fields as shown below.
+
+```js
+validators: [
+  { name: 'required', message: 'How dare you not fill this field?' }
+  { name: 'minLength', value: 8, message: 'Your answer is too short! It must be at least 8 characters.' },
+]
+```
+
 
 #### Fields Object
 

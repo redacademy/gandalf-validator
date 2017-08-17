@@ -28,6 +28,15 @@ describe('Gandalf', () => {
           hintText: 'Name',
         },
       },
+      {
+        name: 'next',
+        component: test.component,
+        validators: ['required'],
+        errorPropName: 'errorText',
+        props: {
+          hintText: 'Next',
+        },
+      },
     ]
   });
 
@@ -54,6 +63,14 @@ describe('Gandalf', () => {
             value: 'Blake'
           }
         });
+
+        test.field2 = test.subject.state.fields.next;
+        test.field2.element.props.onChange({
+          target: {
+            value: 'Next'
+          }
+        });
+
       });
 
       it('should return an object', () => {
@@ -79,6 +96,62 @@ describe('Gandalf', () => {
         const result = test.subject.getCleanFormData();
         expect(result).toEqual(null);
       });
+    });
+  });
+
+  describe('.formHasPristineElements', () => {
+    describe('when form is untouched', () => {
+      beforeEach(() => {
+        simulateReactBuild();
+      });
+
+      it('should return true', () => {
+        const result = test.subject.formHasPristineElements();
+        expect(result).toBe(true);
+      });
+    });
+
+    describe('when some elements have been touched', () => {
+      beforeEach(() => {
+        simulateReactBuild();
+
+        test.field = test.subject.state.fields.name;
+        test.field.element.props.onChange({
+          target: {
+            value: 'Blake'
+          }
+        });
+      });
+
+      it('should return true', () => {
+        const result = test.subject.formHasPristineElements();
+        expect(result).toBe(true);
+      });
+    });
+  });
+
+  describe('when all elements have been touched', () => {
+    beforeEach(() => {
+      simulateReactBuild();
+
+      test.field = test.subject.state.fields.name;
+      test.field.element.props.onChange({
+        target: {
+          value: 'Blake'
+        }
+      });
+
+      test.field2 = test.subject.state.fields.next;
+      test.field2.element.props.onChange({
+        target: {
+          value: 'Next'
+        }
+      });
+    });
+
+    it('should return false', () => {
+      const result = test.subject.formHasPristineElements();
+      expect(result).toBe(false);
     });
   });
 });

@@ -10,7 +10,7 @@ class Gandalf extends React.Component<{}, GandalfState> {
 
   constructor(fieldData = []) {
     super();
-    this.state = { fieldData, fields: {}, pristine: true };
+    this.state = { fieldData, fields: {} };
   }
 
   componentWillMount(): void {
@@ -62,7 +62,7 @@ class Gandalf extends React.Component<{}, GandalfState> {
 
   // None of the elements have been touched. They may be invalid, but don't show errors yet
   formHasPristineElements(): boolean {
-    return !Object.keys(this.state.fields).find(fieldName => !this.state.fields[fieldName].pristine);
+    return !!Object.keys(this.state.fields).find(fieldName => this.state.fields[fieldName].pristine);
   }
 
   getFormData(): Object {
