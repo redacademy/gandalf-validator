@@ -106,13 +106,24 @@ var Gandalf = function (_React$Component) {
                 return _this5.state.fields[fieldName].errorMessage;
             });
         }
+        // None of the elements have been touched. They may be invalid, but don't show errors yet
+
+    }, {
+        key: 'formHasPristineElements',
+        value: function formHasPristineElements() {
+            var _this6 = this;
+
+            return !!Object.keys(this.state.fields).find(function (fieldName) {
+                return _this6.state.fields[fieldName].pristine;
+            });
+        }
     }, {
         key: 'getFormData',
         value: function getFormData() {
-            var _this6 = this;
+            var _this7 = this;
 
             return Object.keys(this.state.fields).reduce(function (formValues, fieldName) {
-                var field = _this6.state.fields[fieldName];
+                var field = _this7.state.fields[fieldName];
                 formValues[fieldName] = field.value;
                 return formValues;
             }, {});

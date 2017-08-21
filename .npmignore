@@ -1,0 +1,6 @@
+__mocks__
+__tests__
+.babelrc
+src
+gulpfile.js
+tsconfig.json

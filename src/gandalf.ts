@@ -60,6 +60,11 @@ class Gandalf extends React.Component<{}, GandalfState> {
     return !Object.keys(this.state.fields).find(fieldName => this.state.fields[fieldName].errorMessage);
   }
 
+  // None of the elements have been touched. They may be invalid, but don't show errors yet
+  formHasPristineElements(): boolean {
+    return !!Object.keys(this.state.fields).find(fieldName => this.state.fields[fieldName].pristine);
+  }
+
   getFormData(): Object {
     return Object.keys(this.state.fields).reduce((formValues, fieldName) => {
       const field = this.state.fields[fieldName];

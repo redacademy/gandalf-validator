@@ -63,6 +63,102 @@ describe('validator', () => {
         });
       });
     });
+
+    describe('validator: minLength', () => {
+      describe('when is less than minLength', () => {
+        it('should return false', () => {
+          expect(validator.isValid({ name: 'minLength', value: 8 }, 'aaasssd')).toBe(false);
+        });
+      });
+
+      describe('when is equal to minLength', () => {
+        it('should return true', () => {
+          expect(validator.isValid({ name: 'minLength', value: 8 }, 'aaasssdd')).toBe(true);
+          expect(validator.isValid({ name: 'minLength', value: 8 }, 12345678)).toBe(true);
+        });
+      });
+
+      describe('when is greated than minLength', () => {
+        it('should return true', () => {
+          expect(validator.isValid({ name: 'minLength', value: 8 }, 'aaasssddd')).toBe(true);
+        });
+      });
+    });
+
+    describe('validator: maxLength', () => {
+      describe('when value is less than maxLength', () => {
+        it('should return true', () => {
+          expect(validator.isValid({ name: 'maxLength', value: 8 }, 'aaasssd')).toBe(true);
+        });
+      });
+
+      describe('when value is equal to maxLength', () => {
+        it('should return false', () => {
+          expect(validator.isValid({ name: 'maxLength', value: 8 }, 'aaasssdd')).toBe(true);
+          expect(validator.isValid({ name: 'maxLength', value: 8 }, 12345678)).toBe(true);
+        });
+      });
+
+      describe('when value is greater than maxLength', () => {
+        it('should return false', () => {
+          expect(validator.isValid({ name: 'maxLength', value: 8 }, 'aaasssddd')).toBe(false);
+        });
+      });
+    });
+
+    describe('validator: min', () => {
+      describe('when is less than min', () => {
+        it('should return false', () => {
+          expect(validator.isValid({ name: 'min', value: 8 }, 7)).toBe(false);
+        });
+      });
+
+      describe('when is equal to min', () => {
+        it('should return true', () => {
+          expect(validator.isValid({ name: 'min', value: 8 }, 8)).toBe(true);
+        });
+      });
+
+      describe('when is greated than min', () => {
+        it('should return true', () => {
+          expect(validator.isValid({ name: 'min', value: 8 }, 9)).toBe(true);
+        });
+      });
+    });
+
+    describe('validator: max', () => {
+      describe('when is less than max', () => {
+        it('should return true', () => {
+          expect(validator.isValid({ name: 'max', value: 8 }, 7)).toBe(true);
+        });
+      });
+
+      describe('when is equal to max', () => {
+        it('should return true', () => {
+          expect(validator.isValid({ name: 'max', value: 8 }, 8)).toBe(true);
+        });
+      });
+
+      describe('when is greated than max', () => {
+        it('should return false', () => {
+          expect(validator.isValid({ name: 'max', value: 8 }, 9)).toBe(false);
+        });
+      });
+    });
+
+    describe('validator: regex', () => {
+      describe('when regex matches', () => {
+        it('should return true', () => {
+          expect(validator.isValid({ name: 'regex', value: /.+\s.+/ }, 'Blake Turner')).toBe(true);
+        });
+      });
+
+      describe('when regex does not match', () => {
+        it('should return false', () => {
+          expect(validator.isValid({ name: 'regex', value: /.+\s.+/ }, 'BlakeTurner')).toBe(false);
+        });
+      });
+    });
   });
 
   describe('validate', () => {
@@ -71,7 +167,7 @@ describe('validator', () => {
         it('should be valid with no error message', () => {
           const result = validator.validate(['required'], 'string');
           expect(result.valid).toBe(true);
-          expect(result.errorMessage).not.toBeDefined();
+          expect(result.errorMessage).toEqual('');
         });
       });
 
@@ -81,6 +177,58 @@ describe('validator', () => {
           expect(result.valid).toBe(false);
           expect(result.errorMessage).toEqual(validator.errorMessages.required);
         });
+
+        describe('when custom error message is provided', () => {
+          it('should be invalid with the custom error message', () => {
+            const result = validator.validate([{ name: 'required', message: 'How dare you not fill this field?' }], null);
+            expect(result.valid).toBe(false);
+            expect(result.errorMessage).toEqual('How dare you not fill this field?');
+          });
+        });
+      });
+    });
+  });
+
+  describe('when a simple validator is passed as an object', () => {
+    describe('when value is present', () => {
+      it('should be valid with no error message', () => {
+        const result = validator.validate([{ name: 'required' }], 'string');
+        expect(result.valid).toBe(true);
+        expect(result.errorMessage).toEqual('');
+      });
+    });
+
+    describe('when value is not present', () => {
+      it('should be invalid with the correct error message', () => {
+        const result = validator.validate([{ name: 'required' }], null);
+        expect(result.valid).toBe(false);
+        expect(result.errorMessage).toEqual(validator.errorMessages.required);
+      });
+    });
+  });
+
+  describe('when a field has both simple and complex validators', () => {
+    describe('when all validators pass', () => {
+      it('should be valid with no error message', () => {
+        const result = validator.validate(['required', { name: 'minLength', value: 5 }], 'string');
+        expect(result.valid).toBe(true);
+        expect(result.errorMessage).toEqual('');
+      });
+    });
+
+    describe('when simple validation fails', () => {
+      it('should be invalid with the correct error message', () => {
+        const result = validator.validate(['required', { name: 'minLength', value: 5 }], null);
+        expect(result.valid).toBe(false);
+        expect(result.errorMessage).toEqual(validator.errorMessages.required);
+      });
+    });
+
+    describe('when complex validation fails', () => {
+      it('should be invalid with the correct error message', () => {
+        const result = validator.validate(['required', { name: 'minLength', value: 5 }], 'abc');
+        expect(result.valid).toBe(false);
+        expect(result.errorMessage).toEqual(validator.errorMessages.minLength(5));
       });
     });
   });

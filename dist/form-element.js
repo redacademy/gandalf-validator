@@ -39,6 +39,7 @@ var FormElement = function () {
         this.getValueInOnChange = props.getValueInOnChange;
         this.onChangeHandler = props.onChangeHandler || 'onChange';
         this.children = props.children;
+        this.pristine = true;
         this.errorMessage = '';
         this.value = '';
         this.timeOut = null;
@@ -77,6 +78,7 @@ var FormElement = function () {
             var value = _ref2.value,
                 skipDebounce = _ref2.skipDebounce;
 
+            this.pristine = false;
             this.value = value;
             if (this.debounce && !skipDebounce) {
                 this.handleDebounce();

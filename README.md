@@ -10,6 +10,7 @@ Determines who shall and shall not pass form validation in React
   - [Fields Object](#fields-object)
   - [Rendering](#rendering)
   - [Getting Form Data](#getting-form-data)
+  - [Full Example](#full-example)
 - [Building Components for Gandalf](#building-components-for-gandalf)
 - [Contributing](#contributing)
 
@@ -32,7 +33,7 @@ class Form extends Gandalf {}
 export default Form;
 ```
 
-The `Gandalf` constructor take a `fields` object as its only parameters.
+The `Gandalf` constructor take a [fields object](#fields-object) as its only parameters.
 The keys of the `fields` object are the names of your form elements.
 The values at each key are the definition of the form elements you with to build.
 
@@ -42,13 +43,67 @@ The values at each key are the definition of the form elements you with to build
 |-----------------------|------------------|------------------------------------------------------
 | `component`           | React Component  | The component to render
 | `props`               | Object           | Props to pass to the component
-| `validators`          | Array            | List of validations to apply to the value
+| `validators`          | Array            | List of [validators](#validators) to apply to the value
 | `errorPropName`       | String           | The name of the prop in `component` used to display errors (optional)
 | `errorPropIsBool`     | Boolean          | Whether the `errorPropName` expects a boolean instead of a string (optional)
 | `onChangeHandler`     | Function         | Specify a name for the change handler function, defaults to `onChange`
 | `getValueInOnChange`  | Function         | If the value in the onChange handler is something other than e.target.value, this function can get it. Takes (e, key, payload).
 | `children          `  | Array            | Array of child React Components. Remember to add a `key` prop.
 | `debounce`            | Integer          | Milliseconds to delay validation, resets w/ each keystroke (optional)
+
+#### Validators
+
+Gandalf ships with several out of the box validations. Some are very simple, requiring only a string identifier. Others are more complex, requiring an object.
+
+__Simple__
+
+- `required`
+- `numeric`
+- `email`
+
+To enable a simple validator, add the string identifier to the `validators` prop.
+
+```js
+validators: ['required', 'numeric', 'email']
+```
+
+__Complex__
+
+- `minLength`
+- `maxLength`
+- `min`
+- `max`
+- `regex`
+
+Complex validators are objects with a `name` and `value` property.
+
+```js
+validators: [{ name: 'minLength', value: 8 }, { name: regex, value: /[^0-9]/g }]
+```
+
+__Simple + Complex__
+
+You can use both simple and complex validators on the same field.
+
+```js
+validators: [
+  'required',
+  { name: 'minLength', value: 8 },
+  { name: regex, value: /.+\s.+/g }
+]
+```
+
+__Custom Error Messages__
+
+Gandalf provides generic error messages by default, but you can pass your own to the Validator object. If you're using a simple validator, you can use an object with `name` and `message` fields as shown below.
+
+```js
+validators: [
+  { name: 'required', message: 'How dare you not fill this field?' }
+  { name: 'minLength', value: 8, message: 'Your answer is too short! It must be at least 8 characters.' },
+]
+```
+
 
 #### Fields Object
 
@@ -165,6 +220,16 @@ Gandalf provides two methods for getting form data:
   this.getCleanFormData();
 ```
 
+Gandalf also privides two methods for checking the current state of the form:
+
+```js
+// Not every element on the form has been touched - it may be invalid, but not all errors are triggered
+this.formHasPristineElements()
+
+// Whether the form is currently valid. Use in combination with formHasPristineElements for reliable results
+this.formIsValid()
+```
+
 Recommended implementation:
 
 ```js
@@ -176,6 +241,115 @@ handleSubmit() {
   if (!data) return;
 
   // Handle valid data here
+}
+```
+
+#### Full Example
+
+```javascript
+import React from 'react';
+import Gandalf from 'gandalf-validator';
+import TextField from 'material-ui/TextField';
+import { Input } from 'semantic-ui-react';
+
+class Form extends Gandalf {
+  constructor() {
+    const fields = [
+      {
+        name: 'name',
+        component: TextField,
+        validators: ['required'],
+        errorPropName: 'errorText',
+        props: {
+          hintText: 'Name',
+        },
+        debounce: 500,
+      },
+      {
+        name: 'age',
+        component: TextField,
+        validators: ['required', 'numeric'],
+        errorPropName: 'errorText',
+        props: {
+          hintText: 'Age',
+        },
+        debounce: 300,
+      },
+      {
+        name: 'frequency',
+        component: SelectField,
+        validators: ['required'],
+        errorPropName: 'errorText',
+        getValueInOnChange: (e, key, value) => value,
+        props: {
+          hintText: 'Frequency',
+        },
+        children: [
+          <MenuItem key={1} value="Never" primaryText="Never" />,
+          <MenuItem key={2} value="Every Night" primaryText="Every Night" />,
+          <MenuItem key={3} value="Weeknights" primaryText="Weeknights" />,
+          <MenuItem key={4} value="Weekends" primaryText="Weekends" />,
+          <MenuItem key={5} value="Weekly" primaryText="Weekly" />,
+        ],
+      },
+      {
+        name: 'colour',
+        component: Input,
+        validators: ['required'],
+        errorPropName: 'error',
+        errorPropIsBool: true,
+        props: {
+          placeholder: 'Favourite Colour',
+        },
+        debounce: 300,
+      },
+      {
+        name: 'email',
+        component: TextField,
+        validators: ['required', 'email'],
+        errorPropName: 'errorText',
+        props: {
+          hintText: 'Email',
+        },
+        debounce: 300,
+      },
+    };
+
+    super(fields);
+  }
+
+  handleSubmit() {
+    const data = this.getCleanFormData();
+
+    // If form is invalid, all error messages will show automatically
+    // So you can simply exit the function
+    if (!data) return;
+
+    // Handle valid data here
+  }
+
+  render() {
+    const fields = this.state.fields;
+
+    return (
+      <form>
+        <h1>My Form</h1>
+        { fields.name.element } <br />
+        { fields.age.element } <br />
+        { fields.frequency.element } <br />
+        { fields.email.element } <br />
+        { fields.colour.element } <br />
+        <span>{ fields.colour.errorMessage ? fields.colour.errorMessage : ''}</span>
+
+        <button
+          onClick={() => this.handleSubmit()}
+          disabled={() => this.formHasPristineElements() || !this.formIsValid()}
+        >
+          Submit
+        </button>
+      </form>
+    );
+  }
 }
 ```
 
@@ -275,7 +449,6 @@ class Form extends Gandalf {
   }
 }
 ```
-
 
 ## Contributing
 

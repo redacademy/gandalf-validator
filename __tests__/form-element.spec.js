@@ -53,6 +53,7 @@ describe('FormElement', () => {
         expect(typeof test.subject.onUpdate).toEqual('function');
         expect(test.subject.errorMessage).toEqual('');
         expect(test.subject.value).toEqual('');
+        expect(test.subject.pristine).toBe(true);
       });
     });
   });
@@ -98,6 +99,10 @@ describe('FormElement', () => {
 
     it('should update the value', () => {
       expect(test.subject.value).toEqual(test.newValue);
+    });
+
+    it('should update the pristine flag', () => {
+      expect(test.subject.pristine).toBe(false);
     });
 
     it('should call update function', () => {
