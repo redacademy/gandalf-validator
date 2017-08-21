@@ -50,6 +50,7 @@ The values at each key are the definition of the form elements you with to build
 | `getValueInOnChange`  | Function         | If the value in the onChange handler is something other than e.target.value, this function can get it. Takes (e, key, payload).
 | `children          `  | Array            | Array of child React Components. Remember to add a `key` prop.
 | `debounce`            | Integer          | Milliseconds to delay validation, resets w/ each keystroke (optional)
+| `defaultValue`        | Any              | Default value for the component (optional)
 
 #### Validators
 
@@ -224,6 +225,7 @@ Gandalf also privides two methods for checking the current state of the form:
 
 ```js
 // Not every element on the form has been touched - it may be invalid, but not all errors are triggered
+// An element is not included in this list if it has an empty validators array
 this.formHasPristineElements()
 
 // Whether the form is currently valid. Use in combination with formHasPristineElements for reliable results

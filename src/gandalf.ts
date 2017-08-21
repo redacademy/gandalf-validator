@@ -62,7 +62,9 @@ class Gandalf extends React.Component<{}, GandalfState> {
 
   // None of the elements have been touched. They may be invalid, but don't show errors yet
   formHasPristineElements(): boolean {
-    return !!Object.keys(this.state.fields).find(fieldName => this.state.fields[fieldName].pristine);
+    return !!Object.keys(this.state.fields).find(fieldName => (
+      !!this.state.fields[fieldName].validators.length && this.state.fields[fieldName].pristine
+    ));
   }
 
   getFormData(): Object {

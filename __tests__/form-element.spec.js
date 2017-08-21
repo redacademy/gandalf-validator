@@ -24,6 +24,7 @@ describe('FormElement', () => {
       validators: ['required'],
       errorPropName: 'errorText',
       onUpdate: jest.fn(),
+      defaultValue: 'defaultValue',
       props: {
         hintText: 'Name',
       },
@@ -52,7 +53,7 @@ describe('FormElement', () => {
         expect(test.subject.originalProps).toEqual(test.fieldData.props);
         expect(typeof test.subject.onUpdate).toEqual('function');
         expect(test.subject.errorMessage).toEqual('');
-        expect(test.subject.value).toEqual('');
+        expect(test.subject.value).toEqual('defaultValue');
         expect(test.subject.pristine).toBe(true);
       });
     });
@@ -76,7 +77,7 @@ describe('FormElement', () => {
       expect(props.hintText).toEqual('Name');
       expect(props.name).toEqual(test.fieldData.name);
       expect(props.key).toEqual(test.fieldData.name);
-      expect(props.value).toEqual('');
+      expect(props.value).toEqual('defaultValue');
       expect(props[test.fieldData.errorPropName]).toEqual('');
       expect(typeof props.onChange).toEqual('function');
     });

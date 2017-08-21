@@ -111,6 +111,28 @@ describe('Gandalf', () => {
       });
     });
 
+    describe('when all form elements do not have validators', () => {
+      beforeEach(() => {
+        test.fields = [
+          {
+            name: 'name',
+            component: test.component,
+            validators: [],
+            errorPropName: 'errorText',
+            props: {
+              hintText: 'Name',
+            },
+          }
+        ];
+        simulateReactBuild();
+      });
+
+      it('should return false', () => {
+        const result = test.subject.formHasPristineElements();
+        expect(result).toBe(false);
+      });
+    });
+
     describe('when some elements have been touched', () => {
       beforeEach(() => {
         simulateReactBuild();
