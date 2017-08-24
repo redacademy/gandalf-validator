@@ -8,29 +8,23 @@ interface GandalfState {
 
 class Gandalf extends React.Component<{}, GandalfState> {
 
-  constructor(fieldData = []) {
+  constructor() {
     super();
-    this.state = { fieldData, fields: {} };
+    this.state = { fieldData: [], fields: {} };
   }
 
-  componentWillMount(): void {
-    this.buildFields();
+  buildFields(definitions): void {
+    definitions.forEach(d => this.addField(d));
   }
 
-  addField(fieldData): void {
-    this.state.fieldData.push(fieldData);
-    this.state.fields[fieldData.name] = this.buildField(fieldData);
+  addField(definition): void {
+    this.state.fieldData.push(definition);
+    this.state.fields[definition.name] = this.buildField(definition);
     this.setState({ fieldData: this.state.fieldData, fields: this.state.fields });
   }
 
-  buildFields(): void {
-    this.state.fieldData.forEach(data => {
-      this.state.fields[data.name] = this.buildField(data);
-    });
-  }
-
-  buildField(data): FormElement {
-    const fieldData = Object.assign({}, data, { onUpdate: field => this.updateFieldState(field) });
+  buildField(definition): FormElement {
+    const fieldData = Object.assign({}, definition, { onUpdate: field => this.updateFieldState(field) });
     return new FormElement(fieldData);
   }
 

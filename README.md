@@ -2,14 +2,17 @@
 
 Determines who shall and shall not pass form validation in React
 
+__Note__: This documentation is for version `1.X.X`, for `0.X.X` documentation, see [README_v0](README_v0.md).
+
 ## Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
   - [Options](#options)
-  - [Fields Object](#fields-object)
+  - [Field Definitions](#field-definitions)
   - [Rendering](#rendering)
-  - [Getting Form Data](#getting-form-data)
+  - [Handling Form Submit](#handling-form-submit)
+  - [Checking Form State](#checking-form-state)
   - [Full Example](#full-example)
 - [Building Components for Gandalf](#building-components-for-gandalf)
 - [Contributing](#contributing)
@@ -28,19 +31,52 @@ The `Gandalf` class extends `React.Component`, so we start by extending `Gandalf
 import React from 'react';
 import Gandalf from 'gandalf-validator';
 
-class Form extends Gandalf {}
+class Form extends Gandalf {
+  componentWillMount() {
+    this.buildFields(fieldDefinitions);
+  }
+  ...
+}
 
 export default Form;
 ```
 
-The `Gandalf` constructor take a [fields object](#fields-object) as its only parameters.
-The keys of the `fields` object are the names of your form elements.
-The values at each key are the definition of the form elements you with to build.
+`Gandalf` expects the `buildFields` method to be called in the `componentWillMount` lifecycle method. `buildFields` takes a __field definitions array__ as its only parameter.
 
-#### Options
+## Field Definitions
+
+__Example__
+
+```js
+const fieldDefinitions = [
+  {
+    name: 'name',
+    component: TextField,
+    validators: ['required'],
+    errorPropName: 'errorText',
+    props: {
+      hintText: 'Name',
+    },
+    debounce: 500,
+  },
+  {
+    name: 'age',
+    component: TextField,
+    validators: ['required', 'numeric'],
+    errorPropName: 'errorText',
+    props: {
+      hintText: 'Age',
+    },
+    debounce: 300,
+  }
+];
+```
+
+__Options__
 
 | Property              | Type             | Description
 |-----------------------|------------------|------------------------------------------------------
+| `name`                | String           | Field name
 | `component`           | React Component  | The component to render
 | `props`               | Object           | Props to pass to the component
 | `validators`          | Array            | List of [validators](#validators) to apply to the value
@@ -105,8 +141,7 @@ validators: [
 ]
 ```
 
-
-#### Fields Object
+__In Practice__
 
 ```javascript
 import React from 'react';
@@ -115,36 +150,67 @@ import TextField from 'material-ui/TextField';
 import { Input } from 'semantic-ui-react';
 
 class Form extends Gandalf {
-  constructor() {
-    const fields = [
+  componentWillMount() {
+    const fieldDefinitions = [
       {
-        name: 'name',
-        component: TextField,
+        name: 'firstName',
+        component: TextInput,
         validators: ['required'],
         errorPropName: 'errorText',
         props: {
-          hintText: 'Name',
-        },
-        debounce: 500,
-      },
-      {
-        name: 'age',
-        component: TextField,
-        validators: ['required', 'numeric'],
-        errorPropName: 'errorText',
-        props: {
-          hintText: 'Age',
+          autoComplete: 'given-name',
+          label: 'First Name',
         },
         debounce: 300,
       },
       {
-        name: 'frequency',
+        name: 'lastName',
+        component: TextInput,
+        validators: ['required'],
+        errorPropName: 'errorText',
+        props: {
+          autoComplete: 'family-name',
+          label: 'Last Name',
+        },
+        debounce: 300,
+      },
+      {
+        name: 'company',
+        component: TextInput,
+        validators: ['required'],
+        errorPropName: 'errorText',
+        props: {
+          autoComplete: 'organization',
+          label: 'Company Name',
+        },
+        debounce: 300,
+      },
+      {
+        name: 'phone',
+        component: TextInput,
+        validators: [
+          'required',
+          {
+            name: 'regex',
+            value: /\D*([1-9]\d{2})(\D*)([1-9]\d{2})(\D*)(\d{4})\D*/,
+            message: 'Please enter a valid phone number',
+          },
+        ],
+        errorPropName: 'errorText',
+        props: {
+          autoComplete: 'tel',
+          label: 'Phone #',
+        },
+        debounce: 700,
+      },
+      {
+        name: 'availability',
         component: SelectField,
         validators: ['required'],
         errorPropName: 'errorText',
         getValueInOnChange: (e, key, value) => value,
         props: {
-          hintText: 'Frequency',
+          hintText: 'Availability',
         },
         children: [
           <MenuItem key={1} value="Never" primaryText="Never" />,
@@ -177,17 +243,14 @@ class Form extends Gandalf {
       },
     };
 
-    super(fields);
+    this.buildFields(fieldDefinitions);
   }
 }
 ```
 
 #### Rendering
 
-Gandalf builds your elements for you, and exposes them as the `element`
-member of each `fields` object.
-
-Since Gandalf is a React Component, you can use its render method for output:
+The `buildFields` method build your form inputs as puts them into `this.state.fields`. Each element is accessible via the value of its `name` property.
 
 ```javascript
 render() {
@@ -196,43 +259,33 @@ render() {
   return (
     <form>
       <h1>My Form</h1>
-      { fields.name.element } <br />
-      { fields.age.element } <br />
-      { fields.frequency.element } <br />
-      { fields.email.element } <br />
+      { fields.firstName.element } <br />
+      { fields.lastName.element } <br />
+      { fields.company.element } <br />
+      { fields.phone.element } <br />
+      { fields.availability.element } <br />
       { fields.colour.element } <br />
-      <span>{ fields.colour.errorMessage ? fields.colour.errorMessage : ''}</span>
+      { fields.email.element } <br />
 
-      <button onClick={() => this.handleSubmit()}>Submit</button>
+      <button onClick={this.handleSubmit}>Submit</button>
     </form>
   );
 }
 ```
 
-#### Getting Form Data
+#### Handling Form Submit
 
 Gandalf provides two methods for getting form data:
 
 ```js
-  // Returns form data, regardless of its validity
-  this.getFormData();
+// Returns form data, regardless of its validity
+this.getFormData();
 
-  // If the form is valid, returns the form data, otherwise returns null
-  this.getCleanFormData();
+// If the form is valid, returns the form data, otherwise returns null
+this.getCleanFormData();
 ```
 
-Gandalf also privides two methods for checking the current state of the form:
-
-```js
-// Not every element on the form has been touched - it may be invalid, but not all errors are triggered
-// An element is not included in this list if it has an empty validators array
-this.formHasPristineElements()
-
-// Whether the form is currently valid. Use in combination with formHasPristineElements for reliable results
-this.formIsValid()
-```
-
-Recommended implementation:
+Recommended submit handler implementation:
 
 ```js
 handleSubmit() {
@@ -246,7 +299,20 @@ handleSubmit() {
 }
 ```
 
-#### Full Example
+#### Checking Form State
+
+Gandalf also privides two methods for checking the current state of the form:
+
+```js
+// Not every element on the form has been touched - it may be invalid, but not all errors are triggered
+// An element is not included in this list if it has an empty validators array
+this.formHasPristineElements()
+
+// Whether the form is currently valid. Use in combination with formHasPristineElements for reliable results
+this.formIsValid()
+```
+
+## Full Example
 
 ```javascript
 import React from 'react';
@@ -255,36 +321,67 @@ import TextField from 'material-ui/TextField';
 import { Input } from 'semantic-ui-react';
 
 class Form extends Gandalf {
-  constructor() {
-    const fields = [
+  componentWillMount() {
+    const fieldDefinitions = [
       {
-        name: 'name',
-        component: TextField,
+        name: 'firstName',
+        component: TextInput,
         validators: ['required'],
         errorPropName: 'errorText',
         props: {
-          hintText: 'Name',
-        },
-        debounce: 500,
-      },
-      {
-        name: 'age',
-        component: TextField,
-        validators: ['required', 'numeric'],
-        errorPropName: 'errorText',
-        props: {
-          hintText: 'Age',
+          autoComplete: 'given-name',
+          label: 'First Name',
         },
         debounce: 300,
       },
       {
-        name: 'frequency',
+        name: 'lastName',
+        component: TextInput,
+        validators: ['required'],
+        errorPropName: 'errorText',
+        props: {
+          autoComplete: 'family-name',
+          label: 'Last Name',
+        },
+        debounce: 300,
+      },
+      {
+        name: 'company',
+        component: TextInput,
+        validators: ['required'],
+        errorPropName: 'errorText',
+        props: {
+          autoComplete: 'organization',
+          label: 'Company Name',
+        },
+        debounce: 300,
+      },
+      {
+        name: 'phone',
+        component: TextInput,
+        validators: [
+          'required',
+          {
+            name: 'regex',
+            value: /\D*([1-9]\d{2})(\D*)([1-9]\d{2})(\D*)(\d{4})\D*/,
+            message: 'Please enter a valid phone number',
+          },
+        ],
+        errorPropName: 'errorText',
+        props: {
+          autoComplete: 'tel',
+          label: 'Phone #',
+        },
+        debounce: 700,
+      },
+      {
+        name: 'availability',
         component: SelectField,
         validators: ['required'],
         errorPropName: 'errorText',
         getValueInOnChange: (e, key, value) => value,
         props: {
-          hintText: 'Frequency',
+          hintText: 'Availability',
         },
         children: [
           <MenuItem key={1} value="Never" primaryText="Never" />,
@@ -317,7 +414,7 @@ class Form extends Gandalf {
       },
     };
 
-    super(fields);
+    this.buildFields(fieldDefinitions);
   }
 
   handleSubmit() {
@@ -336,12 +433,13 @@ class Form extends Gandalf {
     return (
       <form>
         <h1>My Form</h1>
-        { fields.name.element } <br />
-        { fields.age.element } <br />
-        { fields.frequency.element } <br />
-        { fields.email.element } <br />
+        { fields.firstName.element } <br />
+        { fields.lastName.element } <br />
+        { fields.company.element } <br />
+        { fields.phone.element } <br />
+        { fields.availability.element } <br />
         { fields.colour.element } <br />
-        <span>{ fields.colour.errorMessage ? fields.colour.errorMessage : ''}</span>
+        { fields.email.element } <br />
 
         <button
           onClick={() => this.handleSubmit()}
@@ -408,7 +506,7 @@ import { View, Text, TouchableHighlight } from 'react-native';
 import ValidatedTextInput from '../components/ValidatedTextInput';
 
 class Form extends Gandalf {
-  constructor() {
+  componentWillMount() {
     const fields = [
       {
         name: 'fName',
@@ -423,7 +521,7 @@ class Form extends Gandalf {
       },
     };
 
-    super(fields);
+    this.buildFields(fields);
   }
 
   handleSubmit() {

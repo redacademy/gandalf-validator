@@ -41,7 +41,7 @@ var FormElement = function () {
         this.children = props.children;
         this.pristine = true;
         this.errorMessage = '';
-        this.value = '';
+        this.value = props.defaultValue || '';
         this.timeOut = null;
         this.element = this.createReactElement();
     }

@@ -7,8 +7,8 @@ describe('Gandalf', () => {
   let test;
 
   const simulateReactBuild = () => {
-    test.subject = new Gandalf(test.fields);
-    test.subject.componentWillMount();
+    test.subject = new Gandalf();
+    test.subject.buildFields(test.fields);
   };
 
   beforeEach(() => {

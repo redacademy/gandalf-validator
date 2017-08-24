@@ -114,7 +114,7 @@ var Gandalf = function (_React$Component) {
             var _this6 = this;
 
             return !!Object.keys(this.state.fields).find(function (fieldName) {
-                return _this6.state.fields[fieldName].pristine;
+                return !!_this6.state.fields[fieldName].validators.length && _this6.state.fields[fieldName].pristine;
             });
         }
     }, {
