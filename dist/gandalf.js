@@ -28,43 +28,36 @@ var Gandalf = function (_React$Component) {
     _inherits(Gandalf, _React$Component);
 
     function Gandalf() {
-        var fieldData = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-
         _classCallCheck(this, Gandalf);
 
         var _this = _possibleConstructorReturn(this, (Gandalf.__proto__ || Object.getPrototypeOf(Gandalf)).call(this));
 
-        _this.state = { fieldData: fieldData, fields: {} };
+        _this.state = { fieldData: [], fields: {} };
         return _this;
     }
 
     _createClass(Gandalf, [{
-        key: 'componentWillMount',
-        value: function componentWillMount() {
-            this.buildFields();
-        }
-    }, {
-        key: 'addField',
-        value: function addField(fieldData) {
-            this.state.fieldData.push(fieldData);
-            this.state.fields[fieldData.name] = this.buildField(fieldData);
-            this.setState({ fieldData: this.state.fieldData, fields: this.state.fields });
-        }
-    }, {
         key: 'buildFields',
-        value: function buildFields() {
+        value: function buildFields(definitions) {
             var _this2 = this;
 
-            this.state.fieldData.forEach(function (data) {
-                _this2.state.fields[data.name] = _this2.buildField(data);
+            definitions.forEach(function (d) {
+                return _this2.addField(d);
             });
         }
     }, {
+        key: 'addField',
+        value: function addField(definition) {
+            this.state.fieldData.push(definition);
+            this.state.fields[definition.name] = this.buildField(definition);
+            this.setState({ fieldData: this.state.fieldData, fields: this.state.fields });
+        }
+    }, {
         key: 'buildField',
-        value: function buildField(data) {
+        value: function buildField(definition) {
             var _this3 = this;
 
-            var fieldData = Object.assign({}, data, { onUpdate: function onUpdate(field) {
+            var fieldData = Object.assign({}, definition, { onUpdate: function onUpdate(field) {
                     return _this3.updateFieldState(field);
                 } });
             return new _formElement2.default(fieldData);
