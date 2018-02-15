@@ -1,6 +1,6 @@
 {
   "name": "gandalf-validator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Determines who shall and shall not pass form validation in React",
   "main": "dist/gandalf.js",
   "scripts": {
@@ -58,6 +58,9 @@
     }
   ],
   "dependencies": {
+    "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "react": "^15.4.2"
   },
   "devDependencies": {

@@ -1,3 +1,17 @@
 {
-  "presets": ["es2015"]
+  "presets": [
+    [
+      "env", {
+        "targets": {
+          "browsers": ["last 2 versions", "Explorer 10"]
+        },
+        "useBuiltIns": true
+      }
+    ],
+    "es2015",
+    "react"
+  ],
+  "plugins": [
+    "transform-object-assign"
+  ]
 }
