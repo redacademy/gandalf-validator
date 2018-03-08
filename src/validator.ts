@@ -23,7 +23,9 @@ const errorMessages = {
 const validatorFns = {
   required: v => v !== undefined && v !== null && v !== '',
   numeric: v => /^string|number$/.test(typeof v) && !isNaN(v),
-  email: v => /.+@.+\..+/.test(v),
+  // RFC 2822 compliant, minus square brackets and double quotes
+  // http://www.regular-expressions.info/email.html
+  email: v => /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/i.test(v),
   minLength: (v, l) => {
     const str = v.toString();
     return str.length >= l;
