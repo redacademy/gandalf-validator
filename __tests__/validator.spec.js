@@ -46,7 +46,7 @@ describe('validator', () => {
     });
 
     describe('validator: email', () => {
-      describe('when value matches /.+@.+\..+/', () => {
+      describe('when value matches the email regex', () => {
         it('should return true', () => {
           expect(validator.isValid('email', 'test@test.com')).toBe(true);
           expect(validator.isValid('email', 'test+123@sub.test.com')).toBe(true);
@@ -60,6 +60,12 @@ describe('validator', () => {
           expect(validator.isValid('email', true)).toBe(false);
           expect(validator.isValid('email', 'str')).toBe(false);
           expect(validator.isValid('email', '100')).toBe(false);
+          expect(validator.isValid('email', 'test @test.com')).toBe(false);
+          expect(validator.isValid('email', 'test@test..com')).toBe(false);
+          expect(validator.isValid('email', 'test@@test.com')).toBe(false);
+          expect(validator.isValid('email', 'test@testcom')).toBe(false);
+          expect(validator.isValid('email', ' test@testcom')).toBe(false);
+          expect(validator.isValid('email', '..test@testcom')).toBe(false);
         });
       });
     });
