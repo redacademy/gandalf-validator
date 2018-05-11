@@ -36,8 +36,10 @@ var validatorFns = {
         return (/^string|number$/.test(typeof v === 'undefined' ? 'undefined' : _typeof(v)) && !isNaN(v)
         );
     },
+    // RFC 2822 compliant, minus square brackets and double quotes
+    // http://www.regular-expressions.info/email.html
     email: function email(v) {
-        return (/.+@.+\..+/.test(v)
+        return (/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/i.test(v)
         );
     },
     minLength: function minLength(v, l) {
