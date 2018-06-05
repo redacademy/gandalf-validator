@@ -53,7 +53,7 @@ describe('validator', () => {
         });
       });
 
-      describe('when value does not match /.+@.+\..+/', () => {
+      describe('when value does not match the email regex', () => {
         it('should return false', () => {
           expect(validator.isValid('email')).toBe(false);
           expect(validator.isValid('email', null)).toBe(false);
@@ -66,6 +66,14 @@ describe('validator', () => {
           expect(validator.isValid('email', 'test@testcom')).toBe(false);
           expect(validator.isValid('email', ' test@testcom')).toBe(false);
           expect(validator.isValid('email', '..test@testcom')).toBe(false);
+          expect(validator.isValid('email', 'test@test.com @test.com')).toBe(false);
+          expect(validator.isValid('email', 'test@test@test.com')).toBe(false);
+          expect(validator.isValid('email', 'testő@test.com')).toBe(false);
+          expect(validator.isValid('email', 'test@test.com.')).toBe(false);
+          expect(validator.isValid('email', 'hans@m端ller.com')).toBe(false);
+          expect(validator.isValid('email', 'test|123@m端ller.com')).toBe(false);
+          expect(validator.isValid('email', '"  foo  bar  "@example.com')).toBe(false);
+          expect(validator.isValid('email', 'ｇｍａｉｌｇｍａｉｌｇｍａｉｌｇｍａｉｌｇｍａｉｌ@gmail.com')).toBe(false);
         });
       });
     });
