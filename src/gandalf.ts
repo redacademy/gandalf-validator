@@ -66,7 +66,7 @@ class Gandalf extends React.Component<{}, GandalfState> {
     }, {});
   }
 
-  areFormFieldsReady(): boolean {
+  areFieldsReady(): boolean {
     return this.state.hasBuildFieldsBeenCalled;
   }
 }

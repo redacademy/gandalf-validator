@@ -185,7 +185,7 @@ describe('Gandalf', () => {
       });
 
       it('should return true', () => {
-        const result = test.subject.areFormFieldsReady();
+        const result = test.subject.areFieldsReady();
         expect(result).toBe(true);
       });
     });
@@ -196,7 +196,7 @@ describe('Gandalf', () => {
       });
 
       it('should return false', () => {
-        const result = test.subject.areFormFieldsReady();
+        const result = test.subject.areFieldsReady();
         expect(result).toBe(false);
       });
     });
