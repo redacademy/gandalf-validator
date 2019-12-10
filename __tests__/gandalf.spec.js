@@ -150,30 +150,55 @@ describe('Gandalf', () => {
         expect(result).toBe(true);
       });
     });
-  });
 
-  describe('when all elements have been touched', () => {
-    beforeEach(() => {
-      simulateReactBuild();
+    describe('when all elements have been touched', () => {
+      beforeEach(() => {
+        simulateReactBuild();
 
-      test.field = test.subject.state.fields.name;
-      test.field.element.props.onChange({
-        target: {
-          value: 'Blake'
-        }
+        test.field = test.subject.state.fields.name;
+        test.field.element.props.onChange({
+          target: {
+            value: 'Blake'
+          }
+        });
+
+        test.field2 = test.subject.state.fields.next;
+        test.field2.element.props.onChange({
+          target: {
+            value: 'Next'
+          }
+        });
       });
 
-      test.field2 = test.subject.state.fields.next;
-      test.field2.element.props.onChange({
-        target: {
-          value: 'Next'
-        }
+      it('should return false', () => {
+        const result = test.subject.formHasPristineElements();
+        expect(result).toBe(false);
+      });
+    });
+  });
+
+  describe('.areFormFieldsReady', () => {
+
+    describe('when buildFields() is called', () => {
+      beforeEach(() => {
+        simulateReactBuild();
+      });
+
+      it('should return true', () => {
+        const result = test.subject.areFormFieldsReady();
+        expect(result).toBe(true);
       });
     });
 
-    it('should return false', () => {
-      const result = test.subject.formHasPristineElements();
-      expect(result).toBe(false);
+    describe('when buildFields() is not called', () => {
+      beforeEach(() => {
+        test.subject = new Gandalf();
+      });
+
+      it('should return false', () => {
+        const result = test.subject.areFormFieldsReady();
+        expect(result).toBe(false);
+      });
     });
   });
 });

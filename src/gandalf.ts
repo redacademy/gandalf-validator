@@ -4,23 +4,20 @@ import FormElement from './form-element';
 interface GandalfState {
   fieldData: Array<any>
   fields?: Object
+  hasBuildFieldsBeenCalled: boolean
 }
 
 class Gandalf extends React.Component<{}, GandalfState> {
-
-  constructor() {
-    super();
-    this.state = { fieldData: [], fields: {} };
-  }
+  state = { fieldData: [], fields: {}, hasBuildFieldsBeenCalled: false };
 
   buildFields(definitions): void {
-    definitions.forEach(d => this.addField(d));
-  }
+    const { fields, fieldData } = this.state;
+    definitions.forEach(definition => {
+      fieldData.push(definition);
+      fields[definition.name] = this.buildField(definition);
+    });
 
-  addField(definition): void {
-    this.state.fieldData.push(definition);
-    this.state.fields[definition.name] = this.buildField(definition);
-    this.setState({ fieldData: this.state.fieldData, fields: this.state.fields });
+    this.setState({ fieldData, fields, hasBuildFieldsBeenCalled: true });
   }
 
   buildField(definition): FormElement {
@@ -67,6 +64,10 @@ class Gandalf extends React.Component<{}, GandalfState> {
       formValues[fieldName] = field.value;
       return formValues;
     }, {});
+  }
+
+  areFormFieldsReady(): boolean {
+    return this.state.hasBuildFieldsBeenCalled;
   }
 }
 
