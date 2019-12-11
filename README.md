@@ -32,16 +32,25 @@ import React from 'react';
 import Gandalf from 'gandalf-validator';
 
 class Form extends Gandalf {
-  componentWillMount() {
+  componentDidMount() {
     this.buildFields(fieldDefinitions);
   }
   ...
+  render(){
+    if (!this.areFieldsReady()) {
+      return 'Loading...';
+    }
+    return (
+      <form>
+        ...
+    ); 
+  }
 }
-
 export default Form;
 ```
 
-`Gandalf` expects the `buildFields` method to be called in the `componentWillMount` lifecycle method. `buildFields` takes a __field definitions array__ as its only parameter.
+`Gandalf` expects the `buildFields` method to be called in the `componentDidMount` lifecycle method. `buildFields` takes a __field definitions array__ as its only parameter.
+It also provides the `areFieldsReady` method to be used in the render method to show a loading state before all the fields are generated. 
 
 ## Field Definitions
 
@@ -150,7 +159,7 @@ import TextField from 'material-ui/TextField';
 import { Input } from 'semantic-ui-react';
 
 class Form extends Gandalf {
-  componentWillMount() {
+  componentDidMount() {
     const fieldDefinitions = [
       {
         name: 'firstName',
@@ -251,10 +260,13 @@ class Form extends Gandalf {
 #### Rendering
 
 The `buildFields` method build your form inputs as puts them into `this.state.fields`. Each element is accessible via the value of its `name` property.
-
+Use the `areFieldsReady` method to show a loading state before all the fields are generated.
 ```javascript
 render() {
   const fields = this.state.fields;
+  if (!this.areFieldsReady()) {
+    return 'Loading...';
+  }
 
   return (
     <form>
@@ -312,6 +324,12 @@ this.formHasPristineElements()
 this.formIsValid()
 ```
 
+It also provides a method to check if the form elements were built:
+```js
+// Returns true if the buildFields() has been called and fields are created 
+this.areFieldsReady();
+```
+
 ## Full Example
 
 ```javascript
@@ -321,7 +339,7 @@ import TextField from 'material-ui/TextField';
 import { Input } from 'semantic-ui-react';
 
 class Form extends Gandalf {
-  componentWillMount() {
+  componentDidMount() {
     const fieldDefinitions = [
       {
         name: 'firstName',
@@ -429,6 +447,10 @@ class Form extends Gandalf {
 
   render() {
     const fields = this.state.fields;
+    
+    if (!this.areFieldsReady()) {
+      return 'Loading...';
+    }
 
     return (
       <form>
@@ -506,7 +528,7 @@ import { View, Text, TouchableHighlight } from 'react-native';
 import ValidatedTextInput from '../components/ValidatedTextInput';
 
 class Form extends Gandalf {
-  componentWillMount() {
+  componentDidMount() {
     const fields = [
       {
         name: 'fName',
@@ -536,6 +558,10 @@ class Form extends Gandalf {
 
   render() {
     const fields = this.state.fields;
+    
+    if (!this.areFieldsReady()) {
+      return 'Loading...';
+    }
 
     return (
       <View>
