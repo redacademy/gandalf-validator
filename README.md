@@ -578,9 +578,11 @@ class Form extends Gandalf {
 
 ## Contributing
 
-File a Github Issue or fork this repo and make a PR.
+File a Github Issue or fork this repo, make a PR and bump the version in the package.json file.
 
 To build locally, use `npm run build`. This will transpile and uglify the library.
+
+
 
 
 #### Running tests locally
