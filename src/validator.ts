@@ -66,7 +66,7 @@ const getErrorMessage = (validator: string | complexValidator): string => {
   return errorMessages[validator.name];
 };
 
-const validate = (validators: Array<string | complexValidator>, value: any): validationResponse => {
+const validate = (validators: Array<string | complexValidator> = [], value: any): validationResponse => {
   const firstFailedValidator = validators.find(validator => !isValid(validator, value));
 
   return {
